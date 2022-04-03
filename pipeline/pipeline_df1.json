@@ -1,0 +1,64 @@
+{
+	"name": "pipeline_df1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "dataflow1",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"Employee": {
+								"ds_v_Blob_Container": "azurecontainer",
+								"ds_v_Blob_Directory": "Input",
+								"ds_v_Blob_File": "Employee.csv"
+							},
+							"Department": {
+								"ds_v_Blob_Container": "azurecontainer",
+								"ds_v_Blob_Directory": "Input",
+								"ds_v_Blob_File": "Department.csv "
+							},
+							"SinkAgg": {
+								"ds_v_Blob_Container": "azurecontainer",
+								"ds_v_Blob_Directory": "Output",
+								"ds_v_Blob_File": "EmpDept_Agg.csv"
+							},
+							"SinkSort": {
+								"ds_v_Blob_Container": "azurecontainer",
+								"ds_v_Blob_Directory": "Output",
+								"ds_v_Blob_File": "EmpDept_Sorted.csv"
+							},
+							"SinkUnion": {
+								"ds_v_Blob_Container": "azurecontainer",
+								"ds_v_Blob_Directory": "Output",
+								"ds_v_Blob_File": "EmpDept_Union.csv"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"folder": {
+			"name": "DataFlows"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-20T01:23:09Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

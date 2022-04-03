@@ -1,0 +1,45 @@
+{
+	"name": "Parquet_File_Dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ds_v_Blob_Container": {
+				"type": "string"
+			},
+			"ds_v_Blob_Directory": {
+				"type": "string"
+			},
+			"ds_v_Blob_File": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Others"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().ds_v_Blob_File",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().ds_v_Blob_Directory",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().ds_v_Blob_Container",
+					"type": "Expression"
+				}
+			},
+			"compressionCodec": "none"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

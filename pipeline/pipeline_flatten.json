@@ -1,0 +1,92 @@
+{
+	"name": "pipeline_flatten",
+	"properties": {
+		"activities": [
+			{
+				"name": "dataflow_flatten",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "dataflow_flatten",
+						"type": "DataFlowReference",
+						"parameters": {
+							"df_target_file": {
+								"value": "'@{pipeline().parameters.pl_v_Output_Blob_File}'",
+								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"source1": {
+								"ds_v_Blob_Container": {
+									"value": "@pipeline().parameters.pl_v_Blob_Container",
+									"type": "Expression"
+								},
+								"ds_v_Blob_Directory": {
+									"value": "@pipeline().parameters.pl_v_Input_Blob_Directory",
+									"type": "Expression"
+								},
+								"ds_v_Blob_File": {
+									"value": "@pipeline().parameters.pl_v_Input_Blob_File",
+									"type": "Expression"
+								}
+							},
+							"sink1": {
+								"ds_v_Blob_Container": "@pipeline().parameters.pl_v_Blob_Container",
+								"ds_v_Blob_Directory": {
+									"value": "@pipeline().parameters.pl_v_Output_Blob_Directory",
+									"type": "Expression"
+								},
+								"ds_v_Blob_File": {
+									"value": "'ssss'",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"parameters": {
+			"pl_v_Blob_Container": {
+				"type": "string",
+				"defaultValue": "azurecontainer"
+			},
+			"pl_v_Input_Blob_Directory": {
+				"type": "string",
+				"defaultValue": "Input"
+			},
+			"pl_v_Input_Blob_File": {
+				"type": "string",
+				"defaultValue": "Employees.json"
+			},
+			"pl_v_Output_Blob_Directory": {
+				"type": "string",
+				"defaultValue": "Output"
+			},
+			"pl_v_Output_Blob_File": {
+				"type": "string",
+				"defaultValue": "FlattenSkills.csv"
+			}
+		},
+		"folder": {
+			"name": "DataFlows"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-29T02:45:36Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,39 @@
+{
+	"name": "Binary_File_Dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ds_v_Blob_Container": {
+				"type": "string"
+			},
+			"ds_v_Blob_Directory": {
+				"type": "string"
+			},
+			"ds_v_Blob_File": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Others"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": {
+					"value": "@dataset().ds_v_Blob_Directory",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().ds_v_Blob_Container",
+					"type": "Expression"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

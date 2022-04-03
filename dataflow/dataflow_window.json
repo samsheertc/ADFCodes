@@ -1,0 +1,57 @@
+{
+	"name": "dataflow_window",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "CSV_Blob_DataSet",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "CSV_Blob_DataSet",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "window1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ID as short,",
+				"          Name as string,",
+				"          Gender as string,",
+				"          Country as string,",
+				"          Salary as short,",
+				"          Department as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 window(over(Department),",
+				"     asc(Salary, true),",
+				"     AVG = avg(Salary),",
+				"          DENSE_RANK = denseRank(),",
+				"          LEAD = lead(Salary, 1, 0),",
+				"          LAG = lag(Salary, 1, 0),",
+				"          NTILE = nTile(4)) ~> window1",
+				"window1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['Employee_Window.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

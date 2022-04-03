@@ -1,0 +1,391 @@
+{
+	"name": "pipeline3",
+	"properties": {
+		"activities": [
+			{
+				"name": "Condition",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "SetVar2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(variables('inputFile'),'employee')",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "GenerateCSV",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "JsonSource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "JsonReadSettings"
+									}
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureFileStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"path": "$['product']"
+											},
+											"sink": {
+												"ordinal": 1
+											}
+										},
+										{
+											"source": {
+												"path": "$['version']"
+											},
+											"sink": {
+												"ordinal": 2
+											}
+										},
+										{
+											"source": {
+												"path": "$['releaseDate']"
+											},
+											"sink": {
+												"ordinal": 3
+											}
+										},
+										{
+											"source": {
+												"path": "$['demo']"
+											},
+											"sink": {
+												"ordinal": 4
+											}
+										},
+										{
+											"source": {
+												"path": "$['person']['id']"
+											},
+											"sink": {
+												"ordinal": 5
+											}
+										},
+										{
+											"source": {
+												"path": "$['person']['name']"
+											},
+											"sink": {
+												"ordinal": 6
+											}
+										},
+										{
+											"source": {
+												"path": "$['person']['phones']['home']"
+											},
+											"sink": {
+												"ordinal": 7
+											}
+										},
+										{
+											"source": {
+												"path": "$['person']['phones']['mobile']"
+											},
+											"sink": {
+												"ordinal": 8
+											}
+										},
+										{
+											"source": {
+												"path": "$['person']['email'][0]"
+											},
+											"sink": {
+												"ordinal": 9
+											}
+										},
+										{
+											"source": {
+												"path": "$['person']['dateOfBirth']"
+											},
+											"sink": {
+												"ordinal": 10
+											}
+										},
+										{
+											"source": {
+												"path": "$['person']['registered']"
+											},
+											"sink": {
+												"ordinal": 11
+											}
+										},
+										{
+											"source": {
+												"path": "['name']"
+											},
+											"sink": {
+												"ordinal": 12
+											}
+										},
+										{
+											"source": {
+												"path": "['phone']"
+											},
+											"sink": {
+												"ordinal": 13
+											}
+										},
+										{
+											"source": {
+												"path": "['relationship']"
+											},
+											"sink": {
+												"ordinal": 14
+											}
+										}
+									],
+									"collectionReference": "$['person']['emergencyContacts']",
+									"mapComplexValuesToString": false
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "JSON_Blob_Dataset",
+									"type": "DatasetReference",
+									"parameters": {
+										"ds_v_Blob_Container": {
+											"value": "@pipeline().parameters.pl_v_Blob_Container",
+											"type": "Expression"
+										},
+										"ds_v_Blob_Directory": {
+											"value": "@pipeline().parameters.pl_v_Blob_Directory",
+											"type": "Expression"
+										},
+										"ds_v_Blob_File": {
+											"value": "@pipeline().parameters.pl_v_Blob_File_Trg",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "CSV_File_Dataset",
+									"type": "DatasetReference",
+									"parameters": {
+										"ds_v_FileShare_Directory": {
+											"value": "@pipeline().parameters.pl_v_FileShare_Directory",
+											"type": "Expression"
+										},
+										"ds_v_FileShare_File": {
+											"value": "@replace(pipeline().parameters.pl_v_Blob_File_Trg,'.json','csv')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "EmployeeLoad",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "JsonSource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "JsonReadSettings"
+									}
+								},
+								"sink": {
+									"type": "SqlServerSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"path": "Name"
+											},
+											"sink": {
+												"name": "fullname",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "HomeTown"
+											},
+											"sink": {
+												"name": "location_city",
+												"type": "String"
+											}
+										}
+									],
+									"collectionReference": "$['people']",
+									"mapComplexValuesToString": false
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "JSON_Blob_Dataset",
+									"type": "DatasetReference",
+									"parameters": {
+										"ds_v_Blob_Container": {
+											"value": "@pipeline().parameters.pl_v_Blob_Container",
+											"type": "Expression"
+										},
+										"ds_v_Blob_Directory": {
+											"value": "@pipeline().parameters.pl_v_Blob_Directory",
+											"type": "Expression"
+										},
+										"ds_v_Blob_File": {
+											"value": "@pipeline().parameters.pl_v_Blob_File_Trg",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "AzureSqlDatabase",
+									"type": "DatasetReference",
+									"parameters": {
+										"ds_v_DBName": {
+											"value": "@pipeline().parameters.pl_v_DBName",
+											"type": "Expression"
+										},
+										"ds_v_TableName": {
+											"value": "@pipeline().parameters.pl_v_TableName",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "SetVar2",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "SetVar1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "inputFile",
+					"value": {
+						"value": "@replace(pipeline().parameters.pl_v_Blob_File_Trg,'.json','')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "SetVar1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "inputFolder",
+					"value": {
+						"value": "@pipeline().parameters.pl_v_Blob_Path_Trg",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"pl_v_DBName": {
+				"type": "string",
+				"defaultValue": "ENTDWDB"
+			},
+			"pl_v_TableName": {
+				"type": "string",
+				"defaultValue": "persons"
+			},
+			"pl_v_Blob_Container": {
+				"type": "string",
+				"defaultValue": "azurecontainer"
+			},
+			"pl_v_Blob_Directory": {
+				"type": "string",
+				"defaultValue": "JSON"
+			},
+			"pl_v_Blob_Path_Trg": {
+				"type": "string"
+			},
+			"pl_v_Blob_File_Trg": {
+				"type": "string"
+			},
+			"pl_v_FileShare_Directory": {
+				"type": "string",
+				"defaultValue": "SharedDrive"
+			}
+		},
+		"variables": {
+			"inputFile": {
+				"type": "String"
+			},
+			"inputFolder": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "SetAppend"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-11T04:33:18Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

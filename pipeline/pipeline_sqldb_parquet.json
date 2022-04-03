@@ -1,0 +1,148 @@
+{
+	"name": "pipeline_sqldb_parquet",
+	"properties": {
+		"activities": [
+			{
+				"name": "CopyData",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "select * from [dbo].[persons]",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "id",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "id",
+									"type": "Int32",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "fullname",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "fullname",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "location_city",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "location_city",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "AzureSqlDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_v_DBName": {
+								"value": "@pipeline().parameters.pl_v_DBName",
+								"type": "Expression"
+							},
+							"ds_v_TableName": {
+								"value": "@pipeline().parameters.pl_v_TableName",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Parquet_File_Dataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_v_Blob_Container": {
+								"value": "@pipeline().parameters.pl_v_Blob_Container",
+								"type": "Expression"
+							},
+							"ds_v_Blob_Directory": {
+								"value": "@pipeline().parameters.ds_v_Blob_Directory",
+								"type": "Expression"
+							},
+							"ds_v_Blob_File": {
+								"value": "@pipeline().parameters.ds_v_Blob_File",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"pl_v_DBName": {
+				"type": "string",
+				"defaultValue": "ENTDWDB"
+			},
+			"pl_v_TableName": {
+				"type": "string",
+				"defaultValue": "persons"
+			},
+			"pl_v_Blob_Container": {
+				"type": "string",
+				"defaultValue": "azurecontainer"
+			},
+			"ds_v_Blob_Directory": {
+				"type": "string",
+				"defaultValue": "Parquet"
+			},
+			"ds_v_Blob_File": {
+				"type": "string",
+				"defaultValue": "persons.parquet"
+			}
+		},
+		"folder": {
+			"name": "Others"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-29T15:04:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

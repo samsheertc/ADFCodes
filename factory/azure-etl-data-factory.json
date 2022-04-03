@@ -1,0 +1,9 @@
+{
+	"name": "azure-etl-data-factory",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "804c0b6b-c003-4002-b3d2-8ba64b70df89",
+		"tenantId": "80b9362f-9526-4f37-bee9-3f9a671d307d"
+	}
+}

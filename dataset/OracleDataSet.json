@@ -1,0 +1,28 @@
+{
+	"name": "OracleDataSet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Oracle11G",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ds_v_TableName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "DB"
+		},
+		"annotations": [],
+		"type": "OracleTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "HR",
+			"table": {
+				"value": "@dataset().ds_v_TableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

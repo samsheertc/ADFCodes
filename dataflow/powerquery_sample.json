@@ -1,0 +1,28 @@
+{
+	"name": "powerquery_sample",
+	"properties": {
+		"type": "WranglingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"name": "Employee2",
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> Employee2",
+					"dataset": {
+						"referenceName": "Employee2",
+						"type": "DatasetReference"
+					}
+				},
+				{
+					"name": "Department2",
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> Department2",
+					"dataset": {
+						"referenceName": "Department2",
+						"type": "DatasetReference"
+					}
+				}
+			],
+			"script": "section Section1;\r\nshared Employee2 = let AdfDoc = AzureStorage.BlobContents(\"https://azurestorageacct.blob.core.windows.net/azurecontainer/Input/Employee2.csv\"),Csv = Csv.Document(AdfDoc, [Delimiter = \",\", Encoding = TextEncoding.Utf8, QuoteStyle = QuoteStyle.Csv]), PromotedHeaders = Table.PromoteHeaders(Csv, [PromoteAllScalars = true]) in  PromotedHeaders;\r\nshared Department2 = let AdfDoc = AzureStorage.BlobContents(\"https://azurestorageacct.blob.core.windows.net/azurecontainer/Input/Department2.csv\"),Csv = Csv.Document(AdfDoc, [Delimiter = \",\", Encoding = TextEncoding.Utf8, QuoteStyle = QuoteStyle.Csv]), PromotedHeaders = Table.PromoteHeaders(Csv, [PromoteAllScalars = true]) in  PromotedHeaders;\r\nshared UserQuery = let Source = #\"Employee2\",\r\n  #\"Grouped rows\" = Table.Group(Source, {\"DepartmentID\"}, {{\"Count\", each Table.RowCount(_), Int64.Type}}),\r\n  #\"Merged queries\" = Table.NestedJoin(#\"Grouped rows\", {\"DepartmentID\"}, Department2, {\"DepartmentID\"}, \"Department2\", JoinKind.Inner),\r\n  #\"Expanded Department2\" = Table.ExpandTableColumn(#\"Merged queries\", \"Department2\", {\"DepartmentID\", \"DepartmentName\"}, {\"Department2.DepartmentID\", \"Department2.DepartmentName\"}),\r\n  #\"Removed columns\" = Table.RemoveColumns(#\"Expanded Department2\", {\"Department2.DepartmentID\"}),\r\n  #\"Renamed columns\" = Table.RenameColumns(#\"Removed columns\", {{\"Department2.DepartmentName\", \"DepartmentName\"}}),\r\n  #\"Reordered columns\" = Table.ReorderColumns(#\"Renamed columns\", {\"DepartmentID\", \"DepartmentName\", \"Count\"}) in #\"Reordered columns\";\r\n",
+			"documentLocale": "en-us"
+		}
+	}
+}

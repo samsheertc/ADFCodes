@@ -1,0 +1,57 @@
+{
+	"name": "dataflow_flatten",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "JSON_Blob_Dataset",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "CSV_Blob_DataSet",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     df_target_file as string",
+				"}",
+				"source(output(",
+				"          people as (Address as (country as string, state as string, zipcode as integer), Contact as (Phone as integer, email as string), Name as string, Skills as string[], id as short)[]",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'singleDocument') ~> source1",
+				"source1 foldDown(unroll(people.Skills),",
+				"     mapColumn(",
+				"          ID = people.id,",
+				"          Name = people.Name,",
+				"          Skills = people.Skills",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:[($df_target_file)],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

@@ -1,0 +1,229 @@
+{
+	"name": "pipeline_Until_Wait_GetMetaData",
+	"properties": {
+		"activities": [
+			{
+				"name": "Do_Until",
+				"type": "Until",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@bool(variables('FileAvailable'))",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "getFileMetaData",
+							"type": "GetMetadata",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "JSON_Blob_Dataset",
+									"type": "DatasetReference",
+									"parameters": {
+										"ds_v_Blob_Container": {
+											"value": "@pipeline().parameters.pl_v_Blob_Container",
+											"type": "Expression"
+										},
+										"ds_v_Blob_Directory": {
+											"value": "@pipeline().parameters.pl_v_Blob_Directory",
+											"type": "Expression"
+										},
+										"ds_v_Blob_File": {
+											"value": "@pipeline().parameters.pl_v_Blob_File",
+											"type": "Expression"
+										}
+									}
+								},
+								"fieldList": [
+									"exists"
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							}
+						},
+						{
+							"name": "If_Exist_File",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "getFileMetaData",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@bool(activity('getFileMetaData').output.exists)",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "Wait_2Min",
+										"type": "Wait",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"waitTimeInSeconds": 10
+										}
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "SetVar",
+										"description": "True",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "FileAvailable",
+											"value": "True"
+										}
+									}
+								]
+							}
+						}
+					],
+					"timeout": "7.00:00:00"
+				}
+			},
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Do_Until",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "JSON_Blob_Dataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_v_Blob_Container": {
+								"value": "@pipeline().parameters.pl_v_Blob_Container",
+								"type": "Expression"
+							},
+							"ds_v_Blob_Directory": {
+								"value": "@pipeline().parameters.pl_v_Blob_Directory",
+								"type": "Expression"
+							},
+							"ds_v_Blob_File": {
+								"value": "@pipeline().parameters.pl_v_Blob_File",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "JSON_Blob_Dataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_v_Blob_Container": {
+								"value": "@pipeline().parameters.pl_v_Blob_Container_Tgt",
+								"type": "Expression"
+							},
+							"ds_v_Blob_Directory": {
+								"value": "@pipeline().parameters.pl_v_Blob_Directory_Tgt",
+								"type": "Expression"
+							},
+							"ds_v_Blob_File": {
+								"value": "@pipeline().parameters.pl_v_Blob_File_Tgt",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"pl_v_Blob_Container": {
+				"type": "string",
+				"defaultValue": "azurecontainer"
+			},
+			"pl_v_Blob_Directory": {
+				"type": "string",
+				"defaultValue": "JSON"
+			},
+			"pl_v_Blob_File": {
+				"type": "string",
+				"defaultValue": "employee.json"
+			},
+			"pl_v_Blob_Container_Tgt": {
+				"type": "string",
+				"defaultValue": "output"
+			},
+			"pl_v_Blob_Directory_Tgt": {
+				"type": "string",
+				"defaultValue": "JSON"
+			},
+			"pl_v_Blob_File_Tgt": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"FileAvailable": {
+				"type": "String",
+				"defaultValue": "false"
+			}
+		},
+		"folder": {
+			"name": "Others"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-29T15:04:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

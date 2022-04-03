@@ -1,0 +1,17 @@
+{
+	"name": "Oracle11G",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Connect Oracle 11G Database",
+		"annotations": [],
+		"type": "Oracle",
+		"typeProperties": {
+			"connectionString": "host=localhost;port=1522;servicename=ORCL11G;user id=HR",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJlNGJkOGZmMy03MmIxLTQ4NDAtODA0Mi00NDYyNGMxM2Y2NTUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "SelfHostedIR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

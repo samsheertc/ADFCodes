@@ -1,0 +1,63 @@
+{
+	"name": "pipeline_powerqry",
+	"properties": {
+		"activities": [
+			{
+				"name": "powerquery",
+				"type": "ExecuteWranglingDataflow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "powerquery_sample",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"UserQueryCSVBlobDataSet": {
+								"ds_v_Blob_Container": "azurecontainer",
+								"ds_v_Blob_Directory": "Output",
+								"ds_v_Blob_File": "powerqry.csv"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"queries": [
+						{
+							"queryName": "UserQuery",
+							"dataflowSinks": [
+								{
+									"name": "UserQueryCSVBlobDataSet",
+									"dataset": {
+										"referenceName": "CSV_Blob_DataSet",
+										"type": "DatasetReference",
+										"parameters": {
+											"ds_v_Blob_Container": "azurecontainer",
+											"ds_v_Blob_Directory": "Output",
+											"ds_v_Blob_File": "powerqry.csv"
+										}
+									},
+									"script": "sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['powerqry.csv'],\n\ttruncate: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> UserQueryCSVBlobDataSet"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "Others"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-29T15:04:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

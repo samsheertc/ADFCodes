@@ -1,0 +1,235 @@
+{
+	"name": "pipeline_set_append_var",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "JSON_Blob_Dataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_v_Blob_Container": {
+								"value": "@pipeline().parameters.ds_v_Blob_Container",
+								"type": "Expression"
+							},
+							"ds_v_Blob_Directory": {
+								"value": "@pipeline().parameters.ds_v_Blob_Directory",
+								"type": "Expression"
+							},
+							"ds_v_Blob_File": {
+								"value": "@pipeline().parameters.ds_v_Blob_File",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "JsonReadSettings"
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Metadata1').output.childItems",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Copy data1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "JsonSource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true,
+										"wildcardFolderPath": {
+											"value": "@pipeline().parameters.ds_v_Blob_Directory",
+											"type": "Expression"
+										},
+										"wildcardFileName": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "JsonReadSettings"
+									}
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "JSON_Blob_Dataset",
+									"type": "DatasetReference",
+									"parameters": {
+										"ds_v_Blob_Container": {
+											"value": "@pipeline().parameters.ds_v_Blob_Container",
+											"type": "Expression"
+										},
+										"ds_v_Blob_Directory": {
+											"value": "@pipeline().parameters.ds_v_Blob_Directory",
+											"type": "Expression"
+										},
+										"ds_v_Blob_File": {
+											"value": "@pipeline().parameters.ds_v_Blob_File",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "JSON_Blob_Dataset",
+									"type": "DatasetReference",
+									"parameters": {
+										"ds_v_Blob_Container": {
+											"value": "@pipeline().parameters.ds_v_Blob_Container_New",
+											"type": "Expression"
+										},
+										"ds_v_Blob_Directory": {
+											"value": "@pipeline().parameters.ds_v_Blob_Directory_New",
+											"type": "Expression"
+										},
+										"ds_v_Blob_File": {
+											"value": "@pipeline().parameters.ds_v_Blob_File_New",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Append variable1",
+							"type": "AppendVariable",
+							"dependsOn": [
+								{
+									"activity": "Copy data1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "FilesNames",
+								"value": {
+									"value": "@item().name",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Append variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "FilesNames_Copy",
+								"value": {
+									"value": "@variables('FilesNames')",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"ds_v_Blob_Container": {
+				"type": "string",
+				"defaultValue": "azurecontainer"
+			},
+			"ds_v_Blob_Directory": {
+				"type": "string",
+				"defaultValue": "JSON"
+			},
+			"ds_v_Blob_File": {
+				"type": "string"
+			},
+			"ds_v_Blob_Container_New": {
+				"type": "string",
+				"defaultValue": "output"
+			},
+			"ds_v_Blob_Directory_New": {
+				"type": "string",
+				"defaultValue": "JSON"
+			},
+			"ds_v_Blob_File_New": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"FilesNames": {
+				"type": "Array"
+			},
+			"FilesNames_Copy": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "SetAppend"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-11T05:13:17Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

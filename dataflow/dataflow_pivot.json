@@ -1,0 +1,73 @@
+{
+	"name": "dataflow_pivot",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "CSV_Blob_DataSet",
+						"type": "DatasetReference"
+					},
+					"name": "employee"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "CSV_Blob_DataSet",
+						"type": "DatasetReference"
+					},
+					"name": "AggSink"
+				},
+				{
+					"dataset": {
+						"referenceName": "CSV_Blob_DataSet",
+						"type": "DatasetReference"
+					},
+					"name": "PivotSink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "aggregate"
+				},
+				{
+					"name": "pivot"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPLOYEE_ID as short,",
+				"          EMPLOYEENAME as string,",
+				"          GENDER as string,",
+				"          COUNTRY as string,",
+				"          DEPARTMENT as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> employee",
+				"employee aggregate(groupBy(DEPARTMENT,",
+				"          GENDER),",
+				"     COUNT = count(EMPLOYEE_ID)) ~> aggregate",
+				"employee pivot(groupBy(DEPARTMENT),",
+				"     pivotBy(GENDER),",
+				"     {} = count(EMPLOYEE_ID),",
+				"     columnNaming: '$N$V',",
+				"     lateral: true) ~> pivot",
+				"aggregate sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['EmpDept_Agg.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> AggSink",
+				"pivot sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['EmpDept_Pivot.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> PivotSink"
+			]
+		}
+	}
+}

@@ -1,0 +1,112 @@
+{
+	"name": "pipelin_WebActivity_GET",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "http://dummy.restapiexample.com/api/v1/employees",
+					"method": "GET"
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Web1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Web1').output.data",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Stored procedure1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[loadEmployee]",
+								"storedProcedureParameters": {
+									"employee_age": {
+										"value": {
+											"value": "@item().employee_age",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"employee_name": {
+										"value": {
+											"value": "@item().employee_name",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"employee_salary": {
+										"value": {
+											"value": "@item().employee_salary",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"id": {
+										"value": {
+											"value": "@item().id",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"profile_image": {
+										"value": {
+											"value": "@item().profile_image",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "AzureSqlDatabase",
+								"type": "LinkedServiceReference",
+								"parameters": {
+									"ls_v_DBName": "ENTDWDB"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "Others"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-29T15:04:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

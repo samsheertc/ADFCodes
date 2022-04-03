@@ -1,0 +1,34 @@
+{
+	"name": "EventTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline3",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"pl_v_DBName": "ENTDWDB",
+					"pl_v_TableName": "persons",
+					"pl_v_Blob_Container": "azurecontainer",
+					"pl_v_Blob_Directory": "JSON",
+					"pl_v_Blob_Path_Trg": "@triggerBody().folderPath",
+					"pl_v_Blob_File_Trg": "@triggerBody().fileName",
+					"pl_v_FileShare_Directory": "SharedDrive"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/azurecontainer/blobs/JSON/",
+			"blobPathEndsWith": ".json",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/bac1dfaa-72b1-4035-944a-5b4a9b4c7d2b/resourceGroups/DP900/providers/Microsoft.Storage/storageAccounts/azurestorageacct",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

@@ -1,0 +1,106 @@
+{
+	"name": "pipeline2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Append variable1",
+				"type": "AppendVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "FinalVar",
+					"value": {
+						"value": "@variables('Var1')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Append variable3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "DisplayVar",
+					"value": {
+						"value": "@variables('FinalVar')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Append variable2",
+				"type": "AppendVariable",
+				"dependsOn": [
+					{
+						"activity": "Append variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "FinalVar",
+					"value": {
+						"value": "@variables('Var2')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Append variable3",
+				"type": "AppendVariable",
+				"dependsOn": [
+					{
+						"activity": "Append variable2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "FinalVar",
+					"value": {
+						"value": "@variables('Var3')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"Var1": {
+				"type": "String",
+				"defaultValue": "111"
+			},
+			"Var2": {
+				"type": "String",
+				"defaultValue": "222"
+			},
+			"var3": {
+				"type": "String",
+				"defaultValue": "333"
+			},
+			"FinalVar": {
+				"type": "Array"
+			},
+			"DisplayVar": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "SetAppend"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-11T04:33:17Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

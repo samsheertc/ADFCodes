@@ -1,0 +1,80 @@
+{
+	"name": "pipeline_delete_blob",
+	"properties": {
+		"activities": [
+			{
+				"name": "Delete1",
+				"type": "Delete",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "filesDeleted",
+						"value": "These are deleted"
+					}
+				],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "JSON_Blob_Dataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_v_Blob_Container": {
+								"value": "@pipeline().parameters.pl_v_Blob_Container",
+								"type": "Expression"
+							},
+							"ds_v_Blob_Directory": {
+								"value": "@pipeline().parameters.pl_v_Blob_Directory",
+								"type": "Expression"
+							},
+							"ds_v_Blob_File": {
+								"value": "@pipeline().parameters.pl_v_Blob_File",
+								"type": "Expression"
+							}
+						}
+					},
+					"logStorageSettings": {
+						"linkedServiceName": {
+							"referenceName": "AzureBlobStorage",
+							"type": "LinkedServiceReference"
+						},
+						"path": {
+							"value": "@pipeline().parameters.pl_v_Blob_Container",
+							"type": "Expression"
+						}
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
+			}
+		],
+		"parameters": {
+			"pl_v_Blob_Container": {
+				"type": "string",
+				"defaultValue": "azurecontainer"
+			},
+			"pl_v_Blob_Directory": {
+				"type": "string",
+				"defaultValue": "JSON"
+			},
+			"pl_v_Blob_File": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Others"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-29T15:04:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

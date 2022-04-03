@@ -1,0 +1,55 @@
+{
+	"name": "pipeline_validate",
+	"properties": {
+		"activities": [
+			{
+				"name": "Validation1",
+				"type": "Validation",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "Binary_File_Dataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_v_Blob_Container": {
+								"value": "@pipeline().parameters.pl_v_Blob_Container",
+								"type": "Expression"
+							},
+							"ds_v_Blob_Directory": {
+								"value": "@pipeline().parameters.pl_v_Blob_Directory",
+								"type": "Expression"
+							},
+							"ds_v_Blob_File": {
+								"value": "@pipeline().parameters.pl_v_Blob_File",
+								"type": "Expression"
+							}
+						}
+					},
+					"timeout": "0.00:01:00",
+					"sleep": 10,
+					"childItems": false
+				}
+			}
+		],
+		"parameters": {
+			"pl_v_Blob_Container": {
+				"type": "string",
+				"defaultValue": "azurecontainer"
+			},
+			"pl_v_Blob_Directory": {
+				"type": "string",
+				"defaultValue": "Input"
+			},
+			"pl_v_Blob_File": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Others"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-29T15:04:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

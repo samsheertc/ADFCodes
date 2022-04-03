@@ -1,0 +1,268 @@
+{
+	"name": "pipeline_json_to_sqldb_logging",
+	"properties": {
+		"activities": [
+			{
+				"name": "CopyData",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "Name"
+								},
+								"sink": {
+									"name": "fullname",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "HomeTown"
+								},
+								"sink": {
+									"name": "location_city",
+									"type": "String"
+								}
+							}
+						],
+						"collectionReference": "$['people']",
+						"mapComplexValuesToString": false
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "JSON_Blob_Dataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_v_Blob_Container": {
+								"value": "@pipeline().parameters.pl_v_Blob_Container",
+								"type": "Expression"
+							},
+							"ds_v_Blob_Directory": {
+								"value": "@pipeline().parameters.pl_v_Blob_Directory",
+								"type": "Expression"
+							},
+							"ds_v_Blob_File": {
+								"value": "@pipeline().parameters.pl_v_Blob_File",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureSqlDatabase",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_v_DBName": {
+								"value": "@pipeline().parameters.pl_v_DBName",
+								"type": "Expression"
+							},
+							"ds_v_TableName": {
+								"value": "@pipeline().parameters.pl_v_TableName",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Stored procedure1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "CopyData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[Log_PipeLineExecution]",
+					"storedProcedureParameters": {
+						"DataFactory": {
+							"value": {
+								"value": "@pipeline().DataFactory",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"GroupId": {
+							"value": {
+								"value": "@pipeline().GroupId",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Pipeline": {
+							"value": {
+								"value": "@pipeline().Pipeline",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"RunId": {
+							"value": {
+								"value": "@pipeline().RunId",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"scheduledTime": {
+							"value": {
+								"value": "@pipeline().parameters.scheduledTime",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"startTime": {
+							"value": {
+								"value": "@pipeline().parameters.startTime",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"TriggeredByPipelineName": {
+							"value": {
+								"value": "@pipeline()?.TriggeredByPipelineName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"TriggeredByPipelineRunId": {
+							"value": {
+								"value": "@pipeline()?.TriggeredByPipelineRunId",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"TriggerId": {
+							"value": {
+								"value": "@pipeline().TriggerId",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"TriggerName": {
+							"value": {
+								"value": "@pipeline().TriggerName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"TriggerTime": {
+							"value": {
+								"value": "@pipeline().TriggerTime",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"TriggerType": {
+							"value": {
+								"value": "@pipeline().TriggerType",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"windowEndTime": {
+							"value": {
+								"value": "@pipeline().parameters.windowEndTime",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"windowStartTime": {
+							"value": {
+								"value": "@pipeline().parameters.windowStartTime",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"ls_v_DBName": {
+							"value": "@pipeline().parameters.pl_v_DBName",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"pl_v_DBName": {
+				"type": "string"
+			},
+			"pl_v_TableName": {
+				"type": "string"
+			},
+			"pl_v_Blob_Container": {
+				"type": "string"
+			},
+			"pl_v_Blob_Directory": {
+				"type": "string"
+			},
+			"pl_v_Blob_File": {
+				"type": "string"
+			},
+			"windowStartTime": {
+				"type": "string"
+			},
+			"windowEndTime": {
+				"type": "string"
+			},
+			"scheduledTime": {
+				"type": "string"
+			},
+			"startTime": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Others"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-29T15:04:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,288 @@
+{
+	"name": "pipeline_switch",
+	"properties": {
+		"activities": [
+			{
+				"name": "Switch1",
+				"type": "Switch",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"on": {
+						"value": "@pipeline().parameters.pOutPutFolder",
+						"type": "Expression"
+					},
+					"cases": [
+						{
+							"value": "Output",
+							"activities": [
+								{
+									"name": "Output",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "JsonSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "JsonReadSettings"
+											}
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "JSON_Blob_Dataset",
+											"type": "DatasetReference",
+											"parameters": {
+												"ds_v_Blob_Container": {
+													"value": "@pipeline().parameters.pl_v_Blob_Container",
+													"type": "Expression"
+												},
+												"ds_v_Blob_Directory": {
+													"value": "@pipeline().parameters.pl_v_Blob_Directory",
+													"type": "Expression"
+												},
+												"ds_v_Blob_File": {
+													"value": "@pipeline().parameters.pl_v_Blob_File",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "JSON_Blob_Dataset",
+											"type": "DatasetReference",
+											"parameters": {
+												"ds_v_Blob_Container": {
+													"value": "@pipeline().parameters.pl_v_Blob_Container",
+													"type": "Expression"
+												},
+												"ds_v_Blob_Directory": {
+													"value": "@pipeline().parameters.pOutPutFolder",
+													"type": "Expression"
+												},
+												"ds_v_Blob_File": {
+													"value": "@pipeline().parameters.pl_v_Blob_File",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						},
+						{
+							"value": "Output1",
+							"activities": [
+								{
+									"name": "Output1",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "JsonSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "JsonReadSettings"
+											}
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "JSON_Blob_Dataset",
+											"type": "DatasetReference",
+											"parameters": {
+												"ds_v_Blob_Container": {
+													"value": "@pipeline().parameters.pl_v_Blob_Container",
+													"type": "Expression"
+												},
+												"ds_v_Blob_Directory": {
+													"value": "@pipeline().parameters.pl_v_Blob_Directory",
+													"type": "Expression"
+												},
+												"ds_v_Blob_File": {
+													"value": "@pipeline().parameters.pl_v_Blob_File",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "JSON_Blob_Dataset",
+											"type": "DatasetReference",
+											"parameters": {
+												"ds_v_Blob_Container": {
+													"value": "@pipeline().parameters.pl_v_Blob_Container",
+													"type": "Expression"
+												},
+												"ds_v_Blob_Directory": {
+													"value": "@pipeline().parameters.pOutPutFolder",
+													"type": "Expression"
+												},
+												"ds_v_Blob_File": {
+													"value": "@pipeline().parameters.pl_v_Blob_File",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						},
+						{
+							"value": "Output2",
+							"activities": [
+								{
+									"name": "Output2",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "JsonSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "JsonReadSettings"
+											}
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "JSON_Blob_Dataset",
+											"type": "DatasetReference",
+											"parameters": {
+												"ds_v_Blob_Container": {
+													"value": "@pipeline().parameters.pl_v_Blob_Container",
+													"type": "Expression"
+												},
+												"ds_v_Blob_Directory": {
+													"value": "@pipeline().parameters.pl_v_Blob_Directory",
+													"type": "Expression"
+												},
+												"ds_v_Blob_File": {
+													"value": "@pipeline().parameters.pl_v_Blob_File",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "JSON_Blob_Dataset",
+											"type": "DatasetReference",
+											"parameters": {
+												"ds_v_Blob_Container": {
+													"value": "@pipeline().parameters.pl_v_Blob_Container",
+													"type": "Expression"
+												},
+												"ds_v_Blob_Directory": {
+													"value": "@pipeline().parameters.pOutPutFolder",
+													"type": "Expression"
+												},
+												"ds_v_Blob_File": {
+													"value": "@pipeline().parameters.pl_v_Blob_File",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"pOutPutFolder": {
+				"type": "string",
+				"defaultValue": "Output"
+			},
+			"pl_v_Blob_Container": {
+				"type": "string",
+				"defaultValue": "azurecontainer"
+			},
+			"pl_v_Blob_Directory": {
+				"type": "string",
+				"defaultValue": "Input"
+			},
+			"pl_v_Blob_File": {
+				"type": "string",
+				"defaultValue": "employee.json"
+			}
+		},
+		"folder": {
+			"name": "Others"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-29T15:04:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

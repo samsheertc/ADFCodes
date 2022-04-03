@@ -1,0 +1,48 @@
+{
+	"name": "CSV_Blob_DataSet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ds_v_Blob_Container": {
+				"type": "string"
+			},
+			"ds_v_Blob_Directory": {
+				"type": "string"
+			},
+			"ds_v_Blob_File": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "CSV"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().ds_v_Blob_File",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().ds_v_Blob_Directory",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().ds_v_Blob_Container",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

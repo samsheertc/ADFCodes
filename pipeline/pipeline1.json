@@ -1,0 +1,64 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Append variable1",
+				"type": "AppendVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Var1",
+					"value": {
+						"value": "@pipeline().parameters.Param1",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Append variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Var2",
+					"value": {
+						"value": "@variables('Var1')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"Param1": {
+				"type": "string",
+				"defaultValue": "SalesIndia"
+			}
+		},
+		"variables": {
+			"Var1": {
+				"type": "Array",
+				"defaultValue": [
+					"SalesUS",
+					"SalesUK"
+				]
+			},
+			"Var2": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "SetAppend"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-03-11T04:33:17Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
