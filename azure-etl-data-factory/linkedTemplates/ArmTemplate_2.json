@@ -296,7 +296,7 @@
 								"parameters": {
 									"ds_v_Blob_Container": "@pipeline().parameters.SourceFolder",
 									"ds_v_Blob_Directory": "@pipeline().parameters.SourceDirectory",
-									"ds_v_Blob_File": "''"
+									"ds_v_Blob_File": "\"\""
 								}
 							},
 							"logStorageSettings": {
