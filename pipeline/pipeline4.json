@@ -35,27 +35,14 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Binary_File_Dataset",
-						"type": "DatasetReference",
-						"parameters": {
-							"ds_v_Blob_Container": {
-								"value": "@pipeline().globalParameters.envVar1",
-								"type": "Expression"
-							},
-							"ds_v_Blob_Directory": "''",
-							"ds_v_Blob_File": "testfile.txt"
-						}
+						"referenceName": "Binary_File_Dataset_1",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Binary_File_Dataset",
-						"type": "DatasetReference",
-						"parameters": {
-							"ds_v_Blob_Container": "@pipeline().globalParameters.envVar2",
-							"ds_v_Blob_Directory": "''",
-							"ds_v_Blob_File": "''"
-						}
+						"referenceName": "Binary_File_Dataset_2",
+						"type": "DatasetReference"
 					}
 				]
 			}

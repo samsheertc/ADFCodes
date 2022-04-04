@@ -18,7 +18,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "Binary_File_Dataset",
+						"referenceName": "Binary_File_Dataset_1",
 						"type": "DatasetReference",
 						"parameters": {
 							"ds_v_Blob_Container": "@pipeline().parameters.SourceFolder",

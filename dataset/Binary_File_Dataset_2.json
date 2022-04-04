@@ -1,5 +1,5 @@
 {
-	"name": "Binary_File_Dataset_1",
+	"name": "Binary_File_Dataset_2",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage",
@@ -13,8 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "testfile.txt",
-				"container": "azurecontainer/InputDir1/InputDir2/InputDir3"
+				"container": "azurecontainer/OutputDir1/OutputDir2/OutputDir3"
 			}
 		}
 	},
