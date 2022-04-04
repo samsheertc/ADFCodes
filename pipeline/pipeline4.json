@@ -38,23 +38,31 @@
 						"referenceName": "Binary_File_Dataset_1",
 						"type": "DatasetReference",
 						"parameters": {
-							"ds_v_Blob_Container": "azurecontainer/InputDir1/InputDir2/InputDir3/",
-							"ds_v_Blob_File": "testfile.txt"
+							"ds_v_Blob_Container": {
+								"value": "@pipeline().globalParameters.RootPath",
+								"type": "Expression"
+							},
+							"ds_v_Blob_File": {
+								"value": "@pipeline().parameters.pl_v_Blob_File",
+								"type": "Expression"
+							}
 						}
 					}
 				],
 				"outputs": [
 					{
 						"referenceName": "Binary_File_Dataset_2",
-						"type": "DatasetReference",
-						"parameters": {
-							"ds_v_Blob_Container": "azurecontainer/OutputDir1/OutputDir2/OutputDir3/",
-							"ds_v_Blob_File": "\"\""
-						}
+						"type": "DatasetReference"
 					}
 				]
 			}
 		],
+		"parameters": {
+			"pl_v_Blob_File": {
+				"type": "string",
+				"defaultValue": "testfile.txt"
+			}
+		},
 		"annotations": []
 	}
 }
