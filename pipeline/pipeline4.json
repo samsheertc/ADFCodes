@@ -60,7 +60,7 @@
 		"parameters": {
 			"pl_v_Blob_File": {
 				"type": "string",
-				"defaultValue": "testfile.txt"
+				"defaultValue": "testfile1.txt"
 			}
 		},
 		"annotations": []
