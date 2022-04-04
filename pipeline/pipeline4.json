@@ -42,6 +42,7 @@
 								"value": "@pipeline().globalParameters.envVar1",
 								"type": "Expression"
 							},
+							"ds_v_Blob_Directory": "''",
 							"ds_v_Blob_File": "testfile.txt"
 						}
 					}
@@ -52,11 +53,8 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"ds_v_Blob_Container": "@pipeline().globalParameters.envVar2",
-							"ds_v_Blob_Directory": {
-								"value": "\"\"",
-								"type": "Expression"
-							},
-							"ds_v_Blob_File": "\"\""
+							"ds_v_Blob_Directory": "''",
+							"ds_v_Blob_File": "''"
 						}
 					}
 				]
