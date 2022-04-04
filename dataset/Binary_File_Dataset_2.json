@@ -13,7 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"container": "azurecontainer/OutputDir1/OutputDir2/OutputDir3"
+				"folderPath": "azurecontainer/OutputDir1/OutputDir2/OutputDir3"
 			}
 		}
 	},
