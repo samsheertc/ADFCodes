@@ -14,7 +14,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": "testfile.txt",
-				"container": "azurecontainer/InputDir1/InputDir2/InputDir3"
+				"folderPath": "azurecontainer/InputDir1/InputDir2/InputDir3"
 			}
 		}
 	},
