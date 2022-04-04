@@ -1,0 +1,60 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "azure-etl-data-factory"
+		},
+		"AzureBlobStorage_connectionString": {
+			"value": ""
+		},
+		"AzureFileStorage_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase_connectionString": {
+			"value": ""
+		},
+		"MySqlDB_connectionString": {
+			"value": ""
+		},
+		"Oracle11G_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
+			"value": "sec-myazurekeyvault"
+		},
+		"AzureKeyVault_properties_typeProperties_baseUrl": {
+			"value": "https://MY-AZURE-KEYVAULT.vault.azure.net/"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_DBName": {
+			"value": "ENTDWDB"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_TableName": {
+			"value": "persons"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Container": {
+			"value": "azurecontainer"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Directory": {
+			"value": "JSON"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Path_Trg": {
+			"value": "@triggerBody().folderPath"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_File_Trg": {
+			"value": "@triggerBody().fileName"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_FileShare_Directory": {
+			"value": "SharedDrive"
+		},
+		"EventTrigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/bac1dfaa-72b1-4035-944a-5b4a9b4c7d2b/resourceGroups/DP900/providers/Microsoft.Storage/storageAccounts/azurestorageacct"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

@@ -1,0 +1,930 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "azure-etl-data-factory"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_DBName": {
+			"type": "string",
+			"defaultValue": "ENTDWDB"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_TableName": {
+			"type": "string",
+			"defaultValue": "persons"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Container": {
+			"type": "string",
+			"defaultValue": "azurecontainer"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Directory": {
+			"type": "string",
+			"defaultValue": "JSON"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Path_Trg": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_File_Trg": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_FileShare_Directory": {
+			"type": "string",
+			"defaultValue": "SharedDrive"
+		},
+		"EventTrigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/bac1dfaa-72b1-4035-944a-5b4a9b4c7d2b/resourceGroups/DP900/providers/Microsoft.Storage/storageAccounts/azurestorageacct"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_pivot')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CSV_Blob_DataSet",
+								"type": "DatasetReference"
+							},
+							"name": "employee"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "CSV_Blob_DataSet",
+								"type": "DatasetReference"
+							},
+							"name": "AggSink"
+						},
+						{
+							"dataset": {
+								"referenceName": "CSV_Blob_DataSet",
+								"type": "DatasetReference"
+							},
+							"name": "PivotSink"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate"
+						},
+						{
+							"name": "pivot"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          EMPLOYEE_ID as short,",
+						"          EMPLOYEENAME as string,",
+						"          GENDER as string,",
+						"          COUNTRY as string,",
+						"          DEPARTMENT as short",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> employee",
+						"employee aggregate(groupBy(DEPARTMENT,",
+						"          GENDER),",
+						"     COUNT = count(EMPLOYEE_ID)) ~> aggregate",
+						"employee pivot(groupBy(DEPARTMENT),",
+						"     pivotBy(GENDER),",
+						"     {} = count(EMPLOYEE_ID),",
+						"     columnNaming: '$N$V',",
+						"     lateral: true) ~> pivot",
+						"aggregate sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['EmpDept_Agg.csv'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> AggSink",
+						"pivot sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['EmpDept_Pivot.csv'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> PivotSink"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_unpivot')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CSV_Blob_DataSet",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "CSV_Blob_DataSet",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "unpivot1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          DEPARTMENT as short,",
+						"          FeMale as short,",
+						"          Male as short,",
+						"          TransGender as short",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 unpivot(output(",
+						"          Gender as string,",
+						"          Count as short",
+						"     ),",
+						"     ungroupBy(DEPARTMENT),",
+						"     lateral: true,",
+						"     ignoreNullPivots: false) ~> unpivot1",
+						"unpivot1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['EmpDept_UnPivot.csv'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_window')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CSV_Blob_DataSet",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "CSV_Blob_DataSet",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "window1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ID as short,",
+						"          Name as string,",
+						"          Gender as string,",
+						"          Country as string,",
+						"          Salary as short,",
+						"          Department as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 window(over(Department),",
+						"     asc(Salary, true),",
+						"     AVG = avg(Salary),",
+						"          DENSE_RANK = denseRank(),",
+						"          LEAD = lead(Salary, 1, 0),",
+						"          LAG = lag(Salary, 1, 0),",
+						"          NTILE = nTile(4)) ~> window1",
+						"window1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['Employee_Window.csv'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/powerquery_sample')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "WranglingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"name": "Employee2",
+							"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> Employee2",
+							"dataset": {
+								"referenceName": "Employee2",
+								"type": "DatasetReference"
+							}
+						},
+						{
+							"name": "Department2",
+							"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> Department2",
+							"dataset": {
+								"referenceName": "Department2",
+								"type": "DatasetReference"
+							}
+						}
+					],
+					"script": "section Section1;\r\nshared Employee2 = let AdfDoc = AzureStorage.BlobContents(\"https://azurestorageacct.blob.core.windows.net/azurecontainer/Input/Employee2.csv\"),Csv = Csv.Document(AdfDoc, [Delimiter = \",\", Encoding = TextEncoding.Utf8, QuoteStyle = QuoteStyle.Csv]), PromotedHeaders = Table.PromoteHeaders(Csv, [PromoteAllScalars = true]) in  PromotedHeaders;\r\nshared Department2 = let AdfDoc = AzureStorage.BlobContents(\"https://azurestorageacct.blob.core.windows.net/azurecontainer/Input/Department2.csv\"),Csv = Csv.Document(AdfDoc, [Delimiter = \",\", Encoding = TextEncoding.Utf8, QuoteStyle = QuoteStyle.Csv]), PromotedHeaders = Table.PromoteHeaders(Csv, [PromoteAllScalars = true]) in  PromotedHeaders;\r\nshared UserQuery = let Source = #\"Employee2\",\r\n  #\"Grouped rows\" = Table.Group(Source, {\"DepartmentID\"}, {{\"Count\", each Table.RowCount(_), Int64.Type}}),\r\n  #\"Merged queries\" = Table.NestedJoin(#\"Grouped rows\", {\"DepartmentID\"}, Department2, {\"DepartmentID\"}, \"Department2\", JoinKind.Inner),\r\n  #\"Expanded Department2\" = Table.ExpandTableColumn(#\"Merged queries\", \"Department2\", {\"DepartmentID\", \"DepartmentName\"}, {\"Department2.DepartmentID\", \"Department2.DepartmentName\"}),\r\n  #\"Removed columns\" = Table.RemoveColumns(#\"Expanded Department2\", {\"Department2.DepartmentID\"}),\r\n  #\"Renamed columns\" = Table.RenameColumns(#\"Removed columns\", {{\"Department2.DepartmentName\", \"DepartmentName\"}}),\r\n  #\"Reordered columns\" = Table.ReorderColumns(#\"Renamed columns\", {\"DepartmentID\", \"DepartmentName\", \"Count\"}) in #\"Reordered columns\";\r\n",
+					"documentLocale": "en-us"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Delete files older than 5 days')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Please input a folder path as the parameter for this pipeline, and the pipeline will delete files which were last modified more than 30 days ago under the particular folder path.",
+				"activities": [
+					{
+						"name": "DeleteFiles",
+						"description": "Connect to your storage account to save the log file.",
+						"type": "Delete",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "Binary_File_Dataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"ds_v_Blob_Container": "@pipeline().parameters.SourceFolder",
+									"ds_v_Blob_Directory": "@pipeline().parameters.SourceDirectory",
+									"ds_v_Blob_File": "''"
+								}
+							},
+							"logStorageSettings": {
+								"linkedServiceName": {
+									"referenceName": "AzureBlobStorage",
+									"type": "LinkedServiceReference"
+								},
+								"path": {
+									"value": "@pipeline().parameters.LoggingPath",
+									"type": "Expression"
+								}
+							},
+							"enableLogging": true,
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"modifiedDatetimeEnd": {
+									"value": "@{adddays(pipeline().TriggerTime, -5)}",
+									"type": "Expression"
+								},
+								"wildcardFileName": "*"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"SourceFolder": {
+						"type": "string",
+						"defaultValue": "azurecontainer"
+					},
+					"SourceDirectory": {
+						"type": "string",
+						"defaultValue": "Input"
+					},
+					"LoggingPath": {
+						"type": "string",
+						"defaultValue": "azurecontainer/logs"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_alterrow')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "dataflow3",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow_alterrow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Input",
+										"ds_v_Blob_File": "Employee1.csv"
+									},
+									"sink1": {
+										"ds_v_DBName": "ENTDWDB",
+										"ds_v_TableName": "tbl_employees"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "DataFlows"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-29T02:45:36Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_df1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Employee": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Input",
+										"ds_v_Blob_File": "Employee.csv"
+									},
+									"Department": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Input",
+										"ds_v_Blob_File": "Department.csv "
+									},
+									"SinkAgg": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Output",
+										"ds_v_Blob_File": "EmpDept_Agg.csv"
+									},
+									"SinkSort": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Output",
+										"ds_v_Blob_File": "EmpDept_Sorted.csv"
+									},
+									"SinkUnion": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Output",
+										"ds_v_Blob_File": "EmpDept_Union.csv"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "DataFlows"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-20T01:23:09Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_df2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow2",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Employee": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Input",
+										"ds_v_Blob_File": "Employee.csv"
+									},
+									"Department": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Input",
+										"ds_v_Blob_File": "Department.csv"
+									},
+									"EmpDept": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Output",
+										"ds_v_Blob_File": "EmpDept_Lkp.csv"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "DataFlows"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-20T01:25:27Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_flatten')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "dataflow_flatten",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow_flatten",
+								"type": "DataFlowReference",
+								"parameters": {
+									"df_target_file": {
+										"value": "'@{pipeline().parameters.pl_v_Output_Blob_File}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"source1": {
+										"ds_v_Blob_Container": {
+											"value": "@pipeline().parameters.pl_v_Blob_Container",
+											"type": "Expression"
+										},
+										"ds_v_Blob_Directory": {
+											"value": "@pipeline().parameters.pl_v_Input_Blob_Directory",
+											"type": "Expression"
+										},
+										"ds_v_Blob_File": {
+											"value": "@pipeline().parameters.pl_v_Input_Blob_File",
+											"type": "Expression"
+										}
+									},
+									"sink1": {
+										"ds_v_Blob_Container": "@pipeline().parameters.pl_v_Blob_Container",
+										"ds_v_Blob_Directory": {
+											"value": "@pipeline().parameters.pl_v_Output_Blob_Directory",
+											"type": "Expression"
+										},
+										"ds_v_Blob_File": {
+											"value": "'ssss'",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"pl_v_Blob_Container": {
+						"type": "string",
+						"defaultValue": "azurecontainer"
+					},
+					"pl_v_Input_Blob_Directory": {
+						"type": "string",
+						"defaultValue": "Input"
+					},
+					"pl_v_Input_Blob_File": {
+						"type": "string",
+						"defaultValue": "Employees.json"
+					},
+					"pl_v_Output_Blob_Directory": {
+						"type": "string",
+						"defaultValue": "Output"
+					},
+					"pl_v_Output_Blob_File": {
+						"type": "string",
+						"defaultValue": "FlattenSkills.csv"
+					}
+				},
+				"folder": {
+					"name": "DataFlows"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-29T02:45:36Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_pivot')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Pivot",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow_pivot",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"employee": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Input",
+										"ds_v_Blob_File": "Employee1.csv"
+									},
+									"AggSink": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Output",
+										"ds_v_Blob_File": "EmpDept_Agg.csv"
+									},
+									"PivotSink": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Output",
+										"ds_v_Blob_File": "EmpDept_Pivot.csv"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "DataFlows"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-21T02:22:32Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow_pivot')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_powerqry')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "powerquery",
+						"type": "ExecuteWranglingDataflow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "powerquery_sample",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"Employee2": {},
+									"Department2": {},
+									"UserQueryCSVBlobDataSet": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Output",
+										"ds_v_Blob_File": "powerqry.csv"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"queries": [
+								{
+									"queryName": "UserQuery",
+									"dataflowSinks": [
+										{
+											"name": "UserQueryCSVBlobDataSet",
+											"dataset": {
+												"referenceName": "CSV_Blob_DataSet",
+												"type": "DatasetReference",
+												"parameters": {
+													"ds_v_Blob_Container": "azurecontainer",
+													"ds_v_Blob_Directory": "Output",
+													"ds_v_Blob_File": "powerqry.csv"
+												}
+											},
+											"script": "sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['powerqry.csv'],\n\ttruncate: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> UserQueryCSVBlobDataSet"
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Others"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-29T15:04:47Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/powerquery_sample')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_unpivot')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Unpivot",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow_unpivot",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Output",
+										"ds_v_Blob_File": "EmpDept_Pivot.csv"
+									},
+									"sink1": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Output",
+										"ds_v_Blob_File": "EmpDept_UnPivot.csv"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "DataFlows"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-21T02:22:32Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow_unpivot')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_window')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "dataflow_window",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow_window",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Input",
+										"ds_v_Blob_File": "Employee1.csv"
+									},
+									"sink1": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Output",
+										"ds_v_Blob_File": "Employee_Window.csv"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "DataFlows"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-29T02:45:36Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow_window')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/EventTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "pipeline3",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"pl_v_DBName": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_DBName')]",
+							"pl_v_TableName": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_TableName')]",
+							"pl_v_Blob_Container": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Container')]",
+							"pl_v_Blob_Directory": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Directory')]",
+							"pl_v_Blob_Path_Trg": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Path_Trg')]",
+							"pl_v_Blob_File_Trg": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_File_Trg')]",
+							"pl_v_FileShare_Directory": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_FileShare_Directory')]"
+						}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/azurecontainer/blobs/JSON/",
+					"blobPathEndsWith": ".json",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('EventTrigger_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

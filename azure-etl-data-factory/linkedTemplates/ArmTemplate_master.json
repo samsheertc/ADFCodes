@@ -1,0 +1,187 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "azure-etl-data-factory"
+		},
+		"AzureBlobStorage_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage'"
+		},
+		"AzureFileStorage_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureFileStorage'"
+		},
+		"AzureSqlDatabase_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase'"
+		},
+		"MySqlDB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MySqlDB'"
+		},
+		"Oracle11G_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Oracle11G'"
+		},
+		"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "sec-myazurekeyvault"
+		},
+		"AzureKeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://MY-AZURE-KEYVAULT.vault.azure.net/"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_DBName": {
+			"type": "string",
+			"defaultValue": "ENTDWDB"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_TableName": {
+			"type": "string",
+			"defaultValue": "persons"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Container": {
+			"type": "string",
+			"defaultValue": "azurecontainer"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Directory": {
+			"type": "string",
+			"defaultValue": "JSON"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Path_Trg": {
+			"type": "string",
+			"defaultValue": "@triggerBody().folderPath"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_File_Trg": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"EventTrigger_properties_pipeline3_parameters_pl_v_FileShare_Directory": {
+			"type": "string",
+			"defaultValue": "SharedDrive"
+		},
+		"EventTrigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/bac1dfaa-72b1-4035-944a-5b4a9b4c7d2b/resourceGroups/DP900/providers/Microsoft.Storage/storageAccounts/azurestorageacct"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "azure-etl-data-factory_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureBlobStorage_connectionString": {
+						"value": "[parameters('AzureBlobStorage_connectionString')]"
+					},
+					"AzureFileStorage_connectionString": {
+						"value": "[parameters('AzureFileStorage_connectionString')]"
+					},
+					"AzureSqlDatabase_connectionString": {
+						"value": "[parameters('AzureSqlDatabase_connectionString')]"
+					},
+					"MySqlDB_connectionString": {
+						"value": "[parameters('MySqlDB_connectionString')]"
+					},
+					"AzureKeyVault_properties_typeProperties_baseUrl": {
+						"value": "[parameters('AzureKeyVault_properties_typeProperties_baseUrl')]"
+					},
+					"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "azure-etl-data-factory_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"Oracle11G_connectionString": {
+						"value": "[parameters('Oracle11G_connectionString')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'azure-etl-data-factory_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "azure-etl-data-factory_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"EventTrigger_properties_pipeline3_parameters_pl_v_DBName": {
+						"value": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_DBName')]"
+					},
+					"EventTrigger_properties_pipeline3_parameters_pl_v_TableName": {
+						"value": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_TableName')]"
+					},
+					"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Container": {
+						"value": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Container')]"
+					},
+					"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Directory": {
+						"value": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Directory')]"
+					},
+					"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Path_Trg": {
+						"value": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Path_Trg')]"
+					},
+					"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_File_Trg": {
+						"value": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_File_Trg')]"
+					},
+					"EventTrigger_properties_pipeline3_parameters_pl_v_FileShare_Directory": {
+						"value": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_FileShare_Directory')]"
+					},
+					"EventTrigger_properties_typeProperties_scope": {
+						"value": "[parameters('EventTrigger_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'azure-etl-data-factory_ArmTemplate_1')]"
+			]
+		}
+	]
+}

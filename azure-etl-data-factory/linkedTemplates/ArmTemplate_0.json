@@ -1,0 +1,983 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "azure-etl-data-factory"
+		},
+		"AzureBlobStorage_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage'"
+		},
+		"AzureFileStorage_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureFileStorage'"
+		},
+		"AzureSqlDatabase_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase'"
+		},
+		"MySqlDB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MySqlDB'"
+		},
+		"AzureKeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://MY-AZURE-KEYVAULT.vault.azure.net/"
+		},
+		"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "sec-myazurekeyvault"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pipelin_WebActivity_POST')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "http://dummy.restapiexample.com/api/v1/create",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"name": "SajeerColony",
+								"salary": "10000000",
+								"age": "45"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Others"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-29T15:04:47Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Append variable1",
+						"type": "AppendVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Var1",
+							"value": {
+								"value": "@pipeline().parameters.Param1",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Append variable1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "Var2",
+							"value": {
+								"value": "@variables('Var1')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"Param1": {
+						"type": "string",
+						"defaultValue": "SalesIndia"
+					}
+				},
+				"variables": {
+					"Var1": {
+						"type": "Array",
+						"defaultValue": [
+							"SalesUS",
+							"SalesUK"
+						]
+					},
+					"Var2": {
+						"type": "Array"
+					}
+				},
+				"folder": {
+					"name": "SetAppend"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-11T04:33:17Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Append variable1",
+						"type": "AppendVariable",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "FinalVar",
+							"value": {
+								"value": "@variables('Var1')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Append variable3",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "DisplayVar",
+							"value": {
+								"value": "@variables('FinalVar')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Append variable2",
+						"type": "AppendVariable",
+						"dependsOn": [
+							{
+								"activity": "Append variable1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "FinalVar",
+							"value": {
+								"value": "@variables('Var2')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Append variable3",
+						"type": "AppendVariable",
+						"dependsOn": [
+							{
+								"activity": "Append variable2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "FinalVar",
+							"value": {
+								"value": "@variables('Var3')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"Var1": {
+						"type": "String",
+						"defaultValue": "111"
+					},
+					"Var2": {
+						"type": "String",
+						"defaultValue": "222"
+					},
+					"var3": {
+						"type": "String",
+						"defaultValue": "333"
+					},
+					"FinalVar": {
+						"type": "Array"
+					},
+					"DisplayVar": {
+						"type": "Array"
+					}
+				},
+				"folder": {
+					"name": "SetAppend"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-11T04:33:17Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_filter_foreach')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Filter1",
+						"type": "Filter",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.ArrayValues",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@greater(item(),5)",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Filter1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter1').output.Value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Append variable1",
+									"type": "AppendVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "AppendVar",
+										"value": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								},
+								{
+									"name": "Set variable1",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "Append variable1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "PrintVar",
+										"value": {
+											"value": "@variables('AppendVar')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"ArrayValues": {
+						"type": "array",
+						"defaultValue": [
+							1,
+							2,
+							3,
+							4,
+							5,
+							6,
+							7,
+							8,
+							9,
+							10
+						]
+					}
+				},
+				"variables": {
+					"AppendVar": {
+						"type": "Array"
+					},
+					"PrintVar": {
+						"type": "Array"
+					}
+				},
+				"folder": {
+					"name": "Others"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-29T15:04:47Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureFileStorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureFileStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureFileStorage_connectionString')]",
+					"fileShare": "azurefileshare"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureKeyVault')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('AzureKeyVault_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"ls_v_DBName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabase_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SelfHostedIR')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"description": "For Connecting Local DB",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipelin_WebActivity_GET')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "http://dummy.restapiexample.com/api/v1/employees",
+							"method": "GET",
+							"headers": {}
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Web1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Web1').output.data",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Stored procedure1",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dbo].[loadEmployee]",
+										"storedProcedureParameters": {
+											"employee_age": {
+												"value": {
+													"value": "@item().employee_age",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"employee_name": {
+												"value": {
+													"value": "@item().employee_name",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"employee_salary": {
+												"value": {
+													"value": "@item().employee_salary",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"id": {
+												"value": {
+													"value": "@item().id",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"profile_image": {
+												"value": {
+													"value": "@item().profile_image",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "AzureSqlDatabase",
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"ls_v_DBName": "ENTDWDB"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Others"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-03-29T15:04:47Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"ls_v_DBName": {
+							"value": "@dataset().ds_v_DBName",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"ds_v_DBName": {
+						"type": "string"
+					},
+					"ds_v_TableName": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "DB"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().ds_v_TableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Binary_File_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"ds_v_Blob_Container": {
+						"type": "string"
+					},
+					"ds_v_Blob_Directory": {
+						"type": "string"
+					},
+					"ds_v_Blob_File": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Others"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": {
+							"value": "@dataset().ds_v_Blob_Directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().ds_v_Blob_Container",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CSV_Blob_DataSet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"ds_v_Blob_Container": {
+						"type": "string"
+					},
+					"ds_v_Blob_Directory": {
+						"type": "string"
+					},
+					"ds_v_Blob_File": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "CSV"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().ds_v_Blob_File",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().ds_v_Blob_Directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().ds_v_Blob_Container",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CSV_File_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureFileStorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"ds_v_FileShare_Directory": {
+						"type": "string"
+					},
+					"ds_v_FileShare_File": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "CSV"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureFileStorageLocation",
+						"fileName": {
+							"value": "@dataset().ds_v_FileShare_File",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().ds_v_FileShare_Directory",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureFileStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Department2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "PowerQuery"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Department2.csv",
+						"folderPath": "Input",
+						"container": "azurecontainer"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "DepartmentID",
+						"type": "String"
+					},
+					{
+						"name": "DepartmentName",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Employee2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "PowerQuery"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Employee2.csv",
+						"folderPath": "Input",
+						"container": "azurecontainer"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "ID",
+						"type": "String"
+					},
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "Gender",
+						"type": "String"
+					},
+					{
+						"name": "DepartmentID",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/JSON_Blob_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"ds_v_Blob_Container": {
+						"type": "string"
+					},
+					"ds_v_Blob_Directory": {
+						"type": "string"
+					},
+					"ds_v_Blob_File": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Others"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().ds_v_Blob_File",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().ds_v_Blob_Directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().ds_v_Blob_Container",
+							"type": "Expression"
+						}
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Parquet_File_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"ds_v_Blob_Container": {
+						"type": "string"
+					},
+					"ds_v_Blob_Directory": {
+						"type": "string"
+					},
+					"ds_v_Blob_File": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Others"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().ds_v_Blob_File",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().ds_v_Blob_Directory",
+							"type": "Expression"
+						},
+						"container": {
+							"value": "@dataset().ds_v_Blob_Container",
+							"type": "Expression"
+						}
+					},
+					"compressionCodec": "none"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorageKeyVault')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AzureKeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName')]",
+						"secretVersion": "ac14171fea194955a3990550272e6f50"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureKeyVault')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MySqlDB')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"ls_v_DBName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "MySql",
+				"typeProperties": {
+					"connectionString": "[parameters('MySqlDB_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "SelfHostedIR",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/SelfHostedIR')]"
+			]
+		}
+	]
+}
