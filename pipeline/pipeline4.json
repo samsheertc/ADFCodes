@@ -39,7 +39,6 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"ds_v_Blob_Container": "azurecontainer/InputDir1/InputDir2/InputDir3/",
-							"ds_v_Blob_Directory": "\"\"",
 							"ds_v_Blob_File": "testfile.txt"
 						}
 					}
@@ -50,7 +49,6 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"ds_v_Blob_Container": "azurecontainer/OutputDir1/OutputDir2/OutputDir3/",
-							"ds_v_Blob_Directory": "\"\"",
 							"ds_v_Blob_File": "\"\""
 						}
 					}
