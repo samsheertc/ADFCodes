@@ -5,6 +5,17 @@
 			"referenceName": "AzureBlobStorage",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"ds_v_Blob_Container": {
+				"type": "string"
+			},
+			"ds_v_Blob_Directory": {
+				"type": "string"
+			},
+			"ds_v_Blob_File": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "Others"
 		},
