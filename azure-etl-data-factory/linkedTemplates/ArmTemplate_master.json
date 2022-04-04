@@ -103,14 +103,8 @@
 					"AzureSqlDatabase_connectionString": {
 						"value": "[parameters('AzureSqlDatabase_connectionString')]"
 					},
-					"MySqlDB_connectionString": {
-						"value": "[parameters('MySqlDB_connectionString')]"
-					},
 					"AzureKeyVault_properties_typeProperties_baseUrl": {
 						"value": "[parameters('AzureKeyVault_properties_typeProperties_baseUrl')]"
-					},
-					"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -130,8 +124,14 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"MySqlDB_connectionString": {
+						"value": "[parameters('MySqlDB_connectionString')]"
+					},
 					"Oracle11G_connectionString": {
 						"value": "[parameters('Oracle11G_connectionString')]"
+					},
+					"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},

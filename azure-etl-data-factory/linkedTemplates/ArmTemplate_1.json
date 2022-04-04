@@ -7,15 +7,66 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "azure-etl-data-factory"
 		},
+		"MySqlDB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MySqlDB'"
+		},
 		"Oracle11G_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Oracle11G'"
+		},
+		"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "sec-myazurekeyvault"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorageKeyVault')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AzureKeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName')]",
+						"secretVersion": "ac14171fea194955a3990550272e6f50"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MySqlDB')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"ls_v_DBName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "MySql",
+				"typeProperties": {
+					"connectionString": "[parameters('MySqlDB_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "SelfHostedIR",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Oracle11G')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -31,6 +82,81 @@
 					"referenceName": "SelfHostedIR",
 					"type": "IntegrationRuntimeReference"
 				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Delete files older than 5 days')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Please input a folder path as the parameter for this pipeline, and the pipeline will delete files which were last modified more than 30 days ago under the particular folder path.",
+				"activities": [
+					{
+						"name": "DeleteFiles",
+						"description": "Connect to your storage account to save the log file.",
+						"type": "Delete",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "Binary_File_Dataset",
+								"type": "DatasetReference",
+								"parameters": {
+									"ds_v_Blob_Container": "@pipeline().parameters.SourceFolder",
+									"ds_v_Blob_Directory": "@pipeline().parameters.SourceDirectory",
+									"ds_v_Blob_File": "\"\""
+								}
+							},
+							"logStorageSettings": {
+								"linkedServiceName": {
+									"referenceName": "AzureBlobStorage",
+									"type": "LinkedServiceReference"
+								},
+								"path": {
+									"value": "@pipeline().parameters.LoggingPath",
+									"type": "Expression"
+								}
+							},
+							"enableLogging": true,
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"modifiedDatetimeEnd": {
+									"value": "@{adddays(pipeline().TriggerTime, -5)}",
+									"type": "Expression"
+								},
+								"wildcardFileName": "*"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"SourceFolder": {
+						"type": "string",
+						"defaultValue": "azurecontainer"
+					},
+					"SourceDirectory": {
+						"type": "string",
+						"defaultValue": "Input"
+					},
+					"LoggingPath": {
+						"type": "string",
+						"defaultValue": "azurecontainer/logs"
+					}
+				},
+				"annotations": []
 			},
 			"dependsOn": []
 		},
@@ -428,6 +554,67 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-03-11T04:33:18Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline4')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Binary1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Binary2",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
 			},
 			"dependsOn": []
 		},
@@ -2657,7 +2844,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/MySqlDB')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/OracleDataSet')]",
@@ -2690,458 +2879,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Oracle11G')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
-								"type": "DatasetReference"
-							},
-							"name": "Employee"
-						},
-						{
-							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
-								"type": "DatasetReference"
-							},
-							"name": "Department"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
-								"type": "DatasetReference"
-							},
-							"name": "SinkAgg"
-						},
-						{
-							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
-								"type": "DatasetReference"
-							},
-							"name": "SinkSort"
-						},
-						{
-							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
-								"type": "DatasetReference"
-							},
-							"name": "SinkUnion"
-						}
-					],
-					"transformations": [
-						{
-							"name": "joinEmpDept"
-						},
-						{
-							"name": "ModifyEmail",
-							"description": "Autogenerated by data preview actions"
-						},
-						{
-							"name": "ModifyDeptName",
-							"description": "Autogenerated by data preview actions"
-						},
-						{
-							"name": "AggDept"
-						},
-						{
-							"name": "filterDeptIT2"
-						},
-						{
-							"name": "SortColumns"
-						},
-						{
-							"name": "AddSurrogateKey"
-						},
-						{
-							"name": "RemoveColumns",
-							"description": "Autogenerated by data preview actions"
-						},
-						{
-							"name": "ModifyHireDate"
-						},
-						{
-							"name": "filterDeptIT1"
-						},
-						{
-							"name": "filterDeptFinance"
-						},
-						{
-							"name": "MergeDeptITFinance"
-						},
-						{
-							"name": "RemoveDupDept1",
-							"description": "Autogenerated by data preview actions"
-						},
-						{
-							"name": "RemoveDupDept2",
-							"description": "Autogenerated by data preview actions"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          EMPLOYEE_ID as short,",
-						"          FIRST_NAME as string,",
-						"          LAST_NAME as string,",
-						"          EMAIL as string,",
-						"          PHONE_NUMBER as string,",
-						"          HIRE_DATE as date 'MM/dd/yyyy',",
-						"          JOB_ID as string,",
-						"          SALARY as short,",
-						"          COMMISSION_PCT as string,",
-						"          MANAGER_ID1 as short,",
-						"          DEPARTMENT_ID as short",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> Employee",
-						"source(output(",
-						"          DEPARTMENT_ID as short,",
-						"          DEPARTMENT_NAME as string,",
-						"          MANAGER_ID2 as short,",
-						"          LOCATION_ID as short",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> Department",
-						"ModifyEmail, ModifyDeptName join(Employee@DEPARTMENT_ID == Department@DEPARTMENT_ID,",
-						"     joinType:'inner',",
-						"     broadcast: 'auto')~> joinEmpDept",
-						"Employee derive(EMAIL = lower(EMAIL)) ~> ModifyEmail",
-						"Department derive(DEPARTMENT_NAME = upper(DEPARTMENT_NAME)) ~> ModifyDeptName",
-						"joinEmpDept aggregate(groupBy(DEPARTMENT_NAME),",
-						"     COUNT = count(EMPLOYEE_ID)) ~> AggDept",
-						"AggDept filter(equals(DEPARTMENT_NAME,\"IT\")) ~> filterDeptIT2",
-						"joinEmpDept sort(asc(EMPLOYEE_ID, true),",
-						"     partitionBy('hash', 1)) ~> SortColumns",
-						"ModifyHireDate keyGenerate(output(SurrogateKey as long),",
-						"     startAt: 1000L,",
-						"     stepValue: 1L) ~> AddSurrogateKey",
-						"SortColumns select(mapColumn(",
-						"          EMPLOYEE_ID,",
-						"          FIRST_NAME,",
-						"          LAST_NAME,",
-						"          EMAIL,",
-						"          PHONE_NUMBER,",
-						"          HIRE_DATE,",
-						"          DEPARTMENT_ID = Employee@DEPARTMENT_ID,",
-						"          DEPARTMENT_NAME",
-						"     ),",
-						"     skipDuplicateMapInputs: false,",
-						"     skipDuplicateMapOutputs: false) ~> RemoveColumns",
-						"RemoveColumns derive(HIRE_DATE_MOD = toString(HIRE_DATE,'YYYY/MM/DD')) ~> ModifyHireDate",
-						"joinEmpDept filter(equals(DEPARTMENT_NAME,\"IT\")) ~> filterDeptIT1",
-						"joinEmpDept filter(equals(DEPARTMENT_NAME,\"FINANCE\")) ~> filterDeptFinance",
-						"RemoveDupDept1, RemoveDupDept2 union(byName: true)~> MergeDeptITFinance",
-						"filterDeptIT1 select(mapColumn(",
-						"          EMPLOYEE_ID,",
-						"          FIRST_NAME,",
-						"          LAST_NAME,",
-						"          EMAIL,",
-						"          PHONE_NUMBER,",
-						"          HIRE_DATE,",
-						"          JOB_ID,",
-						"          SALARY,",
-						"          COMMISSION_PCT,",
-						"          MANAGER_ID1,",
-						"          DEPARTMENT_ID = Employee@DEPARTMENT_ID,",
-						"          DEPARTMENT_ID = Department@DEPARTMENT_ID,",
-						"          DEPARTMENT_NAME,",
-						"          MANAGER_ID2,",
-						"          LOCATION_ID",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> RemoveDupDept1",
-						"filterDeptFinance select(mapColumn(",
-						"          EMPLOYEE_ID,",
-						"          FIRST_NAME,",
-						"          LAST_NAME,",
-						"          EMAIL,",
-						"          PHONE_NUMBER,",
-						"          HIRE_DATE,",
-						"          JOB_ID,",
-						"          SALARY,",
-						"          COMMISSION_PCT,",
-						"          MANAGER_ID1,",
-						"          DEPARTMENT_ID = Employee@DEPARTMENT_ID,",
-						"          DEPARTMENT_ID = Department@DEPARTMENT_ID,",
-						"          DEPARTMENT_NAME,",
-						"          MANAGER_ID2,",
-						"          LOCATION_ID",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> RemoveDupDept2",
-						"filterDeptIT2 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     partitionFileNames:['EmpDept_Agg.csv'],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> SinkAgg",
-						"AddSurrogateKey sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     partitionFileNames:['EmpDept_Sorted.csv'],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> SinkSort",
-						"MergeDeptITFinance sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     partitionFileNames:['EmpDept_Union.csv'],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> SinkUnion"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow2')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
-								"type": "DatasetReference"
-							},
-							"name": "Employee"
-						},
-						{
-							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
-								"type": "DatasetReference"
-							},
-							"name": "Department"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
-								"type": "DatasetReference"
-							},
-							"name": "EmpDept"
-						}
-					],
-					"transformations": [
-						{
-							"name": "lookupDept"
-						},
-						{
-							"name": "DropCol1"
-						},
-						{
-							"name": "DropCol2"
-						},
-						{
-							"name": "RemoveColumns1",
-							"description": "Autogenerated by data preview actions"
-						},
-						{
-							"name": "derivedColumn1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          EMPLOYEE_ID as short,",
-						"          FIRST_NAME as string,",
-						"          LAST_NAME as string,",
-						"          EMAIL as string,",
-						"          PHONE_NUMBER as string,",
-						"          HIRE_DATE as date,",
-						"          JOB_ID as string,",
-						"          SALARY as short,",
-						"          COMMISSION_PCT as string,",
-						"          MANAGER_ID1 as short,",
-						"          DEPARTMENT_ID as short",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> Employee",
-						"source(output(",
-						"          DEPARTMENT_ID as short,",
-						"          DEPARTMENT_NAME as string,",
-						"          MANAGER_ID2 as short,",
-						"          LOCATION_ID as short",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> Department",
-						"DropCol1, DropCol2 lookup(DropCol1@DEPARTMENT_ID == DropCol2@DEPARTMENT_ID,",
-						"     multiple: true,",
-						"     broadcast: 'auto')~> lookupDept",
-						"Employee select(mapColumn(",
-						"          EMPLOYEE_ID,",
-						"          FIRST_NAME,",
-						"          LAST_NAME,",
-						"          EMAIL,",
-						"          PHONE_NUMBER,",
-						"          DEPARTMENT_ID",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> DropCol1",
-						"Department select(mapColumn(",
-						"          DEPARTMENT_ID,",
-						"          DEPARTMENT_NAME",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> DropCol2",
-						"lookupDept select(mapColumn(",
-						"          EMPLOYEE_ID,",
-						"          FIRST_NAME,",
-						"          LAST_NAME,",
-						"          EMAIL,",
-						"          PHONE_NUMBER,",
-						"          DEPARTMENT_ID = DropCol1@DEPARTMENT_ID,",
-						"          DEPARTMENT_NAME",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> RemoveColumns1",
-						"RemoveColumns1 derive(FULLNAME = concat(FIRST_NAME,' ',LAST_NAME)) ~> derivedColumn1",
-						"derivedColumn1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     partitionFileNames:['EmpDept_Lkp.csv'],",
-						"     partitionBy('hash', 1)) ~> EmpDept"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow_alterrow')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "AzureSqlDatabase",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "alterRow1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          ID as integer,",
-						"          Name as string,",
-						"          Gender as string,",
-						"          Salary as integer,",
-						"          Department as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 alterRow(deleteIf(Department=='Payroll'),",
-						"     updateIf(Department=='HR')) ~> alterRow1",
-						"alterRow1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:true,",
-						"     insertable:true,",
-						"     updateable:true,",
-						"     upsertable:false,",
-						"     keys:['EmpID'],",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          EmpID = ID,",
-						"          EmpName = Name,",
-						"          Gender,",
-						"          Salary,",
-						"          Department",
-						"     )) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow_flatten')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "JSON_Blob_Dataset",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "flatten1"
-						}
-					],
-					"scriptLines": [
-						"parameters{",
-						"     df_target_file as string",
-						"}",
-						"source(output(",
-						"          people as (Address as (country as string, state as string, zipcode as integer), Contact as (Phone as integer, email as string), Name as string, Skills as string[], id as short)[]",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     documentForm: 'singleDocument') ~> source1",
-						"source1 foldDown(unroll(people.Skills),",
-						"     mapColumn(",
-						"          ID = people.id,",
-						"          Name = people.Name,",
-						"          Skills = people.Skills",
-						"     ),",
-						"     skipDuplicateMapInputs: false,",
-						"     skipDuplicateMapOutputs: false) ~> flatten1",
-						"flatten1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     partitionFileNames:[($df_target_file)],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": []
 		}
 	]
 }
