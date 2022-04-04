@@ -2,13 +2,9 @@
 	"name": "azure-etl-data-factory",
 	"properties": {
 		"globalParameters": {
-			"envVar1": {
+			"RootPath": {
 				"type": "string",
 				"value": "azurecontainer/InputDir1/InputDir2/InputDir3/"
-			},
-			"envVar2": {
-				"type": "string",
-				"value": "azurecontainer/OutputDir1/OutputDir2/OutputDir3/"
 			}
 		}
 	},
