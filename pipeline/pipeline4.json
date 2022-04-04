@@ -42,7 +42,6 @@
 								"value": "@pipeline().globalParameters.envVar1",
 								"type": "Expression"
 							},
-							"ds_v_Blob_Directory": "\"\"",
 							"ds_v_Blob_File": "testfile.txt"
 						}
 					}
