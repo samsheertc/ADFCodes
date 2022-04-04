@@ -52,9 +52,9 @@
 						"referenceName": "Binary_File_Dataset",
 						"type": "DatasetReference",
 						"parameters": {
-							"ds_v_Blob_Container": "\"\"",
+							"ds_v_Blob_Container": "@pipeline().globalParameters.envVar2",
 							"ds_v_Blob_Directory": {
-								"value": "@pipeline().globalParameters.envVar2",
+								"value": "\"\"",
 								"type": "Expression"
 							},
 							"ds_v_Blob_File": "\"\""
