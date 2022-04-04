@@ -1,5 +1,13 @@
 {
 	"name": "azure-etl-data-factory",
+	"properties": {
+		"globalParameters": {
+			"envVar1": {
+				"type": "string",
+				"value": "azurecontainer/InputDir1/InputDir2/InputDir3/"
+			}
+		}
+	},
 	"location": "eastus",
 	"identity": {
 		"type": "SystemAssigned",
