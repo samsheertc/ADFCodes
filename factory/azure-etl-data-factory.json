@@ -5,6 +5,10 @@
 			"envVar1": {
 				"type": "string",
 				"value": "azurecontainer/InputDir1/InputDir2/InputDir3/"
+			},
+			"envVar2": {
+				"type": "string",
+				"value": "azurecontainer/OutputDir1/OutputDir2/OutputDir3/"
 			}
 		}
 	},
