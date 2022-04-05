@@ -47,7 +47,7 @@
 								"type": "Expression"
 							},
 							"ds_v_Blob_File": {
-								"value": "@pipeline().parameters.pl_v_Blob_File",
+								"value": "@pipeline().parameters.pl_v_Blob_In_File",
 								"type": "Expression"
 							}
 						}
@@ -63,16 +63,22 @@
 								"type": "Expression"
 							},
 							"ds_v_Blob_Directory": "Output",
-							"ds_v_Blob_File": "\"\""
+							"ds_v_Blob_File": {
+								"value": "@pipeline().parameters.pl_v_Blob_Out_File",
+								"type": "Expression"
+							}
 						}
 					}
 				]
 			}
 		],
 		"parameters": {
-			"pl_v_Blob_File": {
+			"pl_v_Blob_In_File": {
 				"type": "string",
 				"defaultValue": "testfile1.txt"
+			},
+			"pl_v_Blob_Out_File": {
+				"type": "string"
 			}
 		},
 		"annotations": []
