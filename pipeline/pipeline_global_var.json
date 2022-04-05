@@ -1,5 +1,5 @@
 {
-	"name": "pipeline4",
+	"name": "pipeline_global_var",
 	"properties": {
 		"activities": [
 			{
