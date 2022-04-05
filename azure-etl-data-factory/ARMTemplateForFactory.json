@@ -816,7 +816,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "AzureSqlDatabase",
+											"referenceName": "AzureSQLServer",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_DBName": {
@@ -918,7 +918,7 @@
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]",
 				"[concat(variables('factoryId'), '/datasets/CSV_File_Dataset')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlDatabase')]"
+				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]"
 			]
 		},
 		{
@@ -1454,6 +1454,69 @@
 			"dependsOn": [
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/dataflows/dataflow_alterrow')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_cashed_sink')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "dataflow_cashed_sink",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow_cashed_sink",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {
+										"ds_v_DBName": "ENTDWDB",
+										"ds_v_TableName": "tbl_employees"
+									},
+									"source2": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Input",
+										"ds_v_Blob_File": "employees.csv"
+									},
+									"sink1": {},
+									"sink2": {
+										"ds_v_DBName": "ENTDWDB",
+										"ds_v_TableName": "tbl_employees"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "DataFlows"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[variables('factoryId')]",
+				"[concat(variables('factoryId'), '/dataflows/dataflow_cashed_sink')]"
 			]
 		},
 		{
@@ -2086,7 +2149,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "AzureSqlDatabase",
+								"referenceName": "AzureSQLServer",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_DBName": {
@@ -2137,7 +2200,7 @@
 			"dependsOn": [
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlDatabase')]"
+				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]"
 			]
 		},
 		{
@@ -2224,7 +2287,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "AzureSqlDatabase",
+								"referenceName": "AzureSQLServer",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_DBName": {
@@ -2415,7 +2478,7 @@
 			"dependsOn": [
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlDatabase')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
 			]
 		},
@@ -2444,7 +2507,7 @@
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "AzureSqlDatabase",
+								"referenceName": "AzureSQLServer",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_DBName": {
@@ -2577,7 +2640,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlDatabase')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]",
 				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]"
 			]
 		},
@@ -2606,7 +2669,7 @@
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "AzureSqlDatabase",
+								"referenceName": "AzureSQLServer",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_DBName": {
@@ -2752,7 +2815,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlDatabase')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]",
 				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]"
 			]
 		},
@@ -2895,6 +2958,65 @@
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/dataflows/powerquery_sample')]",
 				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_rank')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "dataflow_rank_transform",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow_rank",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Input",
+										"ds_v_Blob_File": "Employees1.csv"
+									},
+									"sink1": {
+										"ds_v_Blob_Container": "azurecontainer",
+										"ds_v_Blob_Directory": "Output",
+										"ds_v_Blob_File": "sss"
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "DataFlows"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[variables('factoryId')]",
+				"[concat(variables('factoryId'), '/dataflows/dataflow_rank')]"
 			]
 		},
 		{
@@ -3227,7 +3349,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "AzureSqlDatabase",
+								"referenceName": "AzureSQLServer",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_DBName": {
@@ -3289,7 +3411,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlDatabase')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]",
 				"[concat(variables('factoryId'), '/datasets/CSV_File_Dataset')]"
 			]
 		},
@@ -3377,7 +3499,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "AzureSqlDatabase",
+								"referenceName": "AzureSQLServer",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_DBName": {
@@ -3447,7 +3569,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlDatabase')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]",
 				"[concat(variables('factoryId'), '/datasets/Parquet_File_Dataset')]"
 			]
 		},
@@ -3932,7 +4054,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase')]",
+			"name": "[concat(parameters('factoryName'), '/AzureSQLServer')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -4907,64 +5029,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dataflow_rank')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "rank1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          ID as short,",
-						"          Name as string,",
-						"          Gender as string,",
-						"          Salary as short,",
-						"          Department as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 rank(desc(Salary, true),",
-						"     output(Rank as long),",
-						"     dense: true) ~> rank1",
-						"rank1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     partitionFileNames:['EmployeeRanked.csv'],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dataflow_alterrow')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -4983,7 +5047,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "AzureSqlDatabase",
+								"referenceName": "AzureSQLServer",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -5030,7 +5094,101 @@
 			"dependsOn": [
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlDatabase')]"
+				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_cashed_sink')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "AzureSQLServer",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "CSV_Blob_DataSet",
+								"type": "DatasetReference"
+							},
+							"name": "source2"
+						}
+					],
+					"sinks": [
+						{
+							"name": "sink1"
+						},
+						{
+							"dataset": {
+								"referenceName": "AzureSQLServer",
+								"type": "DatasetReference"
+							},
+							"name": "sink2"
+						}
+					],
+					"transformations": [
+						{
+							"name": "surrogateKey1"
+						},
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          maxempid as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     query: 'select max(empid) as maxempid from ENTDWDB.[dbo].[tbl_employees]',",
+						"     format: 'query') ~> source1",
+						"source(output(",
+						"          empname as string,",
+						"          gender as string,",
+						"          country as string,",
+						"          salary as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source2",
+						"source2 keyGenerate(output(empid as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L) ~> surrogateKey1",
+						"surrogateKey1 derive(empid = sink1#outputs()[1].maxempid) ~> derivedColumn1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     store: 'cache',",
+						"     format: 'inline',",
+						"     output: false,",
+						"     saveOrder: 1,",
+						"     mapColumn(",
+						"          maxempid",
+						"     )) ~> sink1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink2"
+					]
+				}
+			},
+			"dependsOn": [
+				"[variables('factoryId')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]",
+				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]"
 			]
 		},
 		{
@@ -5168,6 +5326,64 @@
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     partitionBy('hash', 1)) ~> PivotSink"
+					]
+				}
+			},
+			"dependsOn": [
+				"[variables('factoryId')]",
+				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow_rank')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CSV_Blob_DataSet",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "CSV_Blob_DataSet",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "rank1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ID as short,",
+						"          Name as string,",
+						"          Gender as string,",
+						"          Salary as short,",
+						"          Department as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 rank(desc(Salary, true),",
+						"     output(Rank as long),",
+						"     dense: true) ~> rank1",
+						"rank1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['EmployeeRanked.csv'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
 					]
 				}
 			},
@@ -5333,65 +5549,6 @@
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/datasets/Employee2')]",
 				"[concat(variables('factoryId'), '/datasets/Department2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipeline_rank')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "dataflow_rank_transform",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "1.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "dataflow_rank",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {
-										"ds_v_Blob_Container": "azurecontainer",
-										"ds_v_Blob_Directory": "Input",
-										"ds_v_Blob_File": "Employees1.csv"
-									},
-									"sink1": {
-										"ds_v_Blob_Container": "azurecontainer",
-										"ds_v_Blob_Directory": "Output",
-										"ds_v_Blob_File": "sss"
-									}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "DataFlows"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/dataflows/dataflow_rank')]"
 			]
 		},
 		{

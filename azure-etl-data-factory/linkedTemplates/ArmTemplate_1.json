@@ -432,7 +432,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "AzureSqlDatabase",
+											"referenceName": "AzureSQLServer",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_DBName": {
@@ -1265,7 +1265,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "AzureSqlDatabase",
+								"referenceName": "AzureSQLServer",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_DBName": {
@@ -1399,7 +1399,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "AzureSqlDatabase",
+								"referenceName": "AzureSQLServer",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_DBName": {
@@ -1614,7 +1614,7 @@
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "AzureSqlDatabase",
+								"referenceName": "AzureSQLServer",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_DBName": {
@@ -1772,7 +1772,7 @@
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "AzureSqlDatabase",
+								"referenceName": "AzureSQLServer",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_DBName": {
@@ -2245,7 +2245,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "AzureSqlDatabase",
+								"referenceName": "AzureSQLServer",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_DBName": {
@@ -2391,7 +2391,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "AzureSqlDatabase",
+								"referenceName": "AzureSQLServer",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_DBName": {
