@@ -51,6 +51,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
+								"storedProcedureName": "[dbo].[loadEmployee]",
 								"storedProcedureParameters": {
 									"employee_age": {
 										"value": {
