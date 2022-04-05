@@ -1,5 +1,5 @@
 {
-	"name": "Binary_File_Dataset_1",
+	"name": "Binary_File_Dataset",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage",

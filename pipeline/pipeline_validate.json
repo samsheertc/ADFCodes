@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "Binary_File_Dataset_1",
+						"referenceName": "Binary_File_Dataset",
 						"type": "DatasetReference",
 						"parameters": {
 							"ds_v_Blob_Container": {
