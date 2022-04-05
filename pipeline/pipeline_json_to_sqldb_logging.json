@@ -26,6 +26,11 @@
 							"type": "JsonReadSettings"
 						}
 					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
@@ -72,6 +77,16 @@
 							}
 						}
 					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureSqlTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_v_DBName": "ss",
+							"ds_v_TableName": "ss"
+						}
+					}
 				]
 			},
 			{
@@ -94,6 +109,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"storedProcedureName": "[dbo].[Log_PipeLineExecution]",
 					"storedProcedureParameters": {
 						"DataFactory": {
 							"value": {
@@ -193,6 +209,13 @@
 							},
 							"type": "String"
 						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"ls_v_DBName": "ENTDWDB"
 					}
 				}
 			}

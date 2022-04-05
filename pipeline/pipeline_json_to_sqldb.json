@@ -26,6 +26,11 @@
 							"type": "JsonReadSettings"
 						}
 					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
@@ -70,6 +75,16 @@
 								"value": "@pipeline().parameters.pl_v_Blob_File",
 								"type": "Expression"
 							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureSqlTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_v_DBName": "sss",
+							"ds_v_TableName": "sss"
 						}
 					}
 				]

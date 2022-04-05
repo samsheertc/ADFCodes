@@ -16,8 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlServerSource",
-						"sqlReaderQuery": "select * from [dbo].[persons]",
+						"type": "AzureSqlSource",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -67,6 +66,16 @@
 						]
 					}
 				},
+				"inputs": [
+					{
+						"referenceName": "AzureSqlTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_v_DBName": "ss",
+							"ds_v_TableName": "ss"
+						}
+					}
+				],
 				"outputs": [
 					{
 						"referenceName": "Parquet_File_Dataset",
