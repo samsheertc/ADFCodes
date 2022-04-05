@@ -1,5 +1,5 @@
 {
-	"name": "dataflow3",
+	"name": "dataflow_rank_transform",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
