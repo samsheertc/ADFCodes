@@ -60,7 +60,7 @@
 				"source2 keyGenerate(output(empid as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
-				"surrogateKey1 derive(empid = sink1#outputs()[1].maxempid) ~> derivedColumn1",
+				"surrogateKey1 derive(empid = sink1#outputs()[1].maxempid+empid) ~> derivedColumn1",
 				"source1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
