@@ -115,7 +115,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dbo].[Log_PipeLineExecution]",
+					"storedProcedureName": "test",
 					"storedProcedureParameters": {
 						"DataFactory": {
 							"value": {
@@ -218,14 +218,8 @@
 					}
 				},
 				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"ls_v_DBName": {
-							"value": "@pipeline().parameters.pl_v_DBName",
-							"type": "Expression"
-						}
-					}
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
