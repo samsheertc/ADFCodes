@@ -240,7 +240,7 @@
 									}
 								},
 								"sink": {
-									"type": "SqlServerSink",
+									"type": "AzureSqlSink",
 									"writeBehavior": "insert",
 									"sqlWriterUseTableLock": false
 								},
@@ -286,6 +286,22 @@
 										},
 										"ds_v_Blob_File": {
 											"value": "@pipeline().parameters.pl_v_Blob_File_Trg",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "AzureSqlTable",
+									"type": "DatasetReference",
+									"parameters": {
+										"ds_v_DBName": {
+											"value": "@pipeline().parameters.pl_v_DBName",
+											"type": "Expression"
+										},
+										"ds_v_TableName": {
+											"value": "@pipeline().parameters.pl_v_TableName",
 											"type": "Expression"
 										}
 									}
