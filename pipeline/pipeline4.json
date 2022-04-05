@@ -78,7 +78,8 @@
 				"defaultValue": "testfile1.txt"
 			},
 			"pl_v_Blob_Out_File": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "testfile1.txt"
 			}
 		},
 		"annotations": []
