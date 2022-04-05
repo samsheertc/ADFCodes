@@ -94,7 +94,6 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "test",
 					"storedProcedureParameters": {
 						"DataFactory": {
 							"value": {
@@ -195,10 +194,6 @@
 							"type": "String"
 						}
 					}
-				},
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
 				}
 			}
 		],
