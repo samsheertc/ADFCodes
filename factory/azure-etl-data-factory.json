@@ -5,6 +5,10 @@
 			"RootPath": {
 				"type": "string",
 				"value": "azurecontainer/InputDir1/InputDir2/InputDir3/"
+			},
+			"Blob_Container": {
+				"type": "string",
+				"value": "azurecontainer"
 			}
 		}
 	},
