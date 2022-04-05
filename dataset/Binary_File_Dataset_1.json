@@ -9,6 +9,9 @@
 			"ds_v_Blob_Container": {
 				"type": "string"
 			},
+			"ds_v_Blob_Directory": {
+				"type": "string"
+			},
 			"ds_v_Blob_File": {
 				"type": "string"
 			}
@@ -23,6 +26,10 @@
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
 					"value": "@dataset().ds_v_Blob_File",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().ds_v_Blob_Directory",
 					"type": "Expression"
 				},
 				"container": {
