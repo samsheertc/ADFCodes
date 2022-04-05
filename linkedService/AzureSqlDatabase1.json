@@ -2,11 +2,16 @@
 	"name": "AzureSqlDatabase1",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
+		"parameters": {
+			"ls_v_DBName": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "AzureSqlDatabase",
 		"typeProperties": {
 			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=psqlentdwdb.database.windows.net;initial catalog=ENTDWDB;user id=ive2383",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEY3MTI5MDU4LTc5QTEtNDNGNi1BRTJFLTU4Mzk4RTQ4QUJDNF8xODBkOWYyZC05N2MwLTQ3NzAtYTY0NC0wMGUxNmQ0M2U4ZWUiDQp9"
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEY3MTI5MDU4LTc5QTEtNDNGNi1BRTJFLTU4Mzk4RTQ4QUJDNF9kODQ4NWMzMy0zNTQyLTRmODctOWMyZS0yYWFhNzA0ZWE2ZGYiDQp9"
 		}
 	}
 }
