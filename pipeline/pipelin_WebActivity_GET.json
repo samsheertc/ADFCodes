@@ -51,7 +51,6 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[loadEmployee]",
 								"storedProcedureParameters": {
 									"employee_age": {
 										"value": {
@@ -91,11 +90,8 @@
 								}
 							},
 							"linkedServiceName": {
-								"referenceName": "AzureSqlDatabase",
-								"type": "LinkedServiceReference",
-								"parameters": {
-									"ls_v_DBName": "ENTDWDB"
-								}
+								"referenceName": "AzureSqlDatabase1",
+								"type": "LinkedServiceReference"
 							}
 						}
 					]
