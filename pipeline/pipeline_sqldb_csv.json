@@ -82,7 +82,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AzureSqlDatabase",
+						"referenceName": "AzureSQLServer",
 						"type": "DatasetReference",
 						"parameters": {
 							"ds_v_DBName": {
