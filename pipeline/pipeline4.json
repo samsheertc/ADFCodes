@@ -39,7 +39,11 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"ds_v_Blob_Container": {
-								"value": "@pipeline().globalParameters.RootPath",
+								"value": "@pipeline().globalParameters.Blob_Container",
+								"type": "Expression"
+							},
+							"ds_v_Blob_Directory": {
+								"value": "@pipeline().globalParameters.Blob_Directory",
 								"type": "Expression"
 							},
 							"ds_v_Blob_File": {
@@ -51,8 +55,16 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Binary_File_Dataset_2",
-						"type": "DatasetReference"
+						"referenceName": "Binary_File_Dataset_1",
+						"type": "DatasetReference",
+						"parameters": {
+							"ds_v_Blob_Container": {
+								"value": "@pipeline().globalParameters.Blob_Container",
+								"type": "Expression"
+							},
+							"ds_v_Blob_Directory": "Output",
+							"ds_v_Blob_File": "\"\""
+						}
 					}
 				]
 			}
