@@ -26,11 +26,6 @@
 							"type": "JsonReadSettings"
 						}
 					},
-					"sink": {
-						"type": "SqlServerSink",
-						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false
-					},
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
@@ -73,22 +68,6 @@
 							},
 							"ds_v_Blob_File": {
 								"value": "@pipeline().parameters.pl_v_Blob_File",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "AzureSQLServer",
-						"type": "DatasetReference",
-						"parameters": {
-							"ds_v_DBName": {
-								"value": "@pipeline().parameters.pl_v_DBName",
-								"type": "Expression"
-							},
-							"ds_v_TableName": {
-								"value": "@pipeline().parameters.pl_v_TableName",
 								"type": "Expression"
 							}
 						}

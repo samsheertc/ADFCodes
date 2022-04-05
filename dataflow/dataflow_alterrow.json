@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "AzureSQLServer",
+						"referenceName": "AzureSqlTable",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -49,6 +49,7 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
 				"          EmpID = ID,",
 				"          EmpName = Name,",
