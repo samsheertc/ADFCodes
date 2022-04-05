@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow_rank_transform",
+						"referenceName": "dataflow_rank",
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"source1": {
