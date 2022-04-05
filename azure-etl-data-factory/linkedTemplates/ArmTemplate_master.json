@@ -67,6 +67,22 @@
 			"type": "string",
 			"defaultValue": "/subscriptions/bac1dfaa-72b1-4035-944a-5b4a9b4c7d2b/resourceGroups/DP900/providers/Microsoft.Storage/storageAccounts/azurestorageacct"
 		},
+		"dataFactory_properties_globalParameters_Blob_Container_value": {
+			"type": "string",
+			"defaultValue": "azurecontainer"
+		},
+		"dataFactory_properties_globalParameters_Blob_Directory_value": {
+			"type": "string",
+			"defaultValue": "/InputDir1/InputDir2/InputDir3/"
+		},
+		"dataFactory_location": {
+			"type": "string",
+			"defaultValue": "eastus"
+		},
+		"dataFactory_identity_type": {
+			"type": "string",
+			"defaultValue": "SystemAssigned"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -103,8 +119,23 @@
 					"AzureSqlDatabase_connectionString": {
 						"value": "[parameters('AzureSqlDatabase_connectionString')]"
 					},
+					"dataFactory_properties_globalParameters_Blob_Container_value": {
+						"value": "[parameters('dataFactory_properties_globalParameters_Blob_Container_value')]"
+					},
+					"dataFactory_properties_globalParameters_Blob_Directory_value": {
+						"value": "[parameters('dataFactory_properties_globalParameters_Blob_Directory_value')]"
+					},
+					"dataFactory_location": {
+						"value": "[parameters('dataFactory_location')]"
+					},
+					"dataFactory_identity_type": {
+						"value": "[parameters('dataFactory_identity_type')]"
+					},
 					"AzureKeyVault_properties_typeProperties_baseUrl": {
 						"value": "[parameters('AzureKeyVault_properties_typeProperties_baseUrl')]"
+					},
+					"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -129,9 +160,6 @@
 					},
 					"Oracle11G_connectionString": {
 						"value": "[parameters('Oracle11G_connectionString')]"
-					},
-					"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},

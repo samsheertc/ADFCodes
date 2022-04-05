@@ -50,6 +50,18 @@
 		"EventTrigger_properties_typeProperties_scope": {
 			"value": "/subscriptions/bac1dfaa-72b1-4035-944a-5b4a9b4c7d2b/resourceGroups/DP900/providers/Microsoft.Storage/storageAccounts/azurestorageacct"
 		},
+		"dataFactory_properties_globalParameters_Blob_Container_value": {
+			"value": "azurecontainer"
+		},
+		"dataFactory_properties_globalParameters_Blob_Directory_value": {
+			"value": "/InputDir1/InputDir2/InputDir3/"
+		},
+		"dataFactory_location": {
+			"value": "eastus"
+		},
+		"dataFactory_identity_type": {
+			"value": "SystemAssigned"
+		},
 		"containerUri": {
 			"value": ""
 		},

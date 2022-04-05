@@ -1,1 +1,10 @@
-{}
+{
+	"Blob_Container": {
+		"type": "string",
+		"value": "azurecontainer"
+	},
+	"Blob_Directory": {
+		"type": "string",
+		"value": "/InputDir1/InputDir2/InputDir3/"
+	}
+}
