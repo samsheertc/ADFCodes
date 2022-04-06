@@ -67,6 +67,42 @@
 			"type": "string",
 			"defaultValue": "/subscriptions/bac1dfaa-72b1-4035-944a-5b4a9b4c7d2b/resourceGroups/DP900/providers/Microsoft.Storage/storageAccounts/azurestorageacct"
 		},
+		"trigger1_properties_pipeline_parameters_pl_v_DBName": {
+			"type": "string",
+			"defaultValue": "ENTDWDB"
+		},
+		"trigger1_properties_pipeline_parameters_pl_v_TableName": {
+			"type": "string",
+			"defaultValue": "PipeLineExecution"
+		},
+		"trigger1_properties_pipeline_parameters_pl_v_Blob_Container": {
+			"type": "string",
+			"defaultValue": "azurecontainer"
+		},
+		"trigger1_properties_pipeline_parameters_pl_v_Blob_Directory": {
+			"type": "string",
+			"defaultValue": "Input"
+		},
+		"trigger1_properties_pipeline_parameters_pl_v_Blob_File": {
+			"type": "string",
+			"defaultValue": "employee.json"
+		},
+		"trigger1_properties_pipeline_parameters_windowStartTime": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowStartTime"
+		},
+		"trigger1_properties_pipeline_parameters_windowEndTime": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowEndTime"
+		},
+		"trigger1_properties_pipeline_parameters_scheduledTime": {
+			"type": "string",
+			"defaultValue": "@trigger().scheduledTime"
+		},
+		"trigger1_properties_pipeline_parameters_startTime": {
+			"type": "string",
+			"defaultValue": "@trigger().startTime"
+		},
 		"dataFactory_properties_globalParameters_Blob_Container_value": {
 			"type": "string",
 			"defaultValue": "azurecontainer"
@@ -2152,8 +2188,14 @@
 								"referenceName": "AzureSqlTable",
 								"type": "DatasetReference",
 								"parameters": {
-									"ds_v_DBName": "sss",
-									"ds_v_TableName": "sss"
+									"ds_v_DBName": {
+										"value": "@pipeline().parameters.pl_v_DBName",
+										"type": "Expression"
+									},
+									"ds_v_TableName": {
+										"value": "@pipeline().parameters.pl_v_TableName",
+										"type": "Expression"
+									}
 								}
 							}
 						]
@@ -2284,8 +2326,14 @@
 								"referenceName": "AzureSqlTable",
 								"type": "DatasetReference",
 								"parameters": {
-									"ds_v_DBName": "ss",
-									"ds_v_TableName": "ss"
+									"ds_v_DBName": {
+										"value": "@pipeline().parameters.pl_v_DBName",
+										"type": "Expression"
+									},
+									"ds_v_TableName": {
+										"value": "@pipeline().parameters.pl_v_TableName",
+										"type": "Expression"
+									}
 								}
 							}
 						]
@@ -2416,7 +2464,10 @@
 							"referenceName": "AzureSqlDatabase1",
 							"type": "LinkedServiceReference",
 							"parameters": {
-								"ls_v_DBName": "ENTDWDB"
+								"ls_v_DBName": {
+									"value": "@pipeline().parameters.pl_v_DBName",
+									"type": "Expression"
+								}
 							}
 						}
 					}
@@ -5501,6 +5552,48 @@
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/datasets/Employee2')]",
 				"[concat(variables('factoryId'), '/datasets/Department2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trigger1')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "pipeline_json_to_sqldb_logging",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"pl_v_DBName": "[parameters('trigger1_properties_pipeline_parameters_pl_v_DBName')]",
+						"pl_v_TableName": "[parameters('trigger1_properties_pipeline_parameters_pl_v_TableName')]",
+						"pl_v_Blob_Container": "[parameters('trigger1_properties_pipeline_parameters_pl_v_Blob_Container')]",
+						"pl_v_Blob_Directory": "[parameters('trigger1_properties_pipeline_parameters_pl_v_Blob_Directory')]",
+						"pl_v_Blob_File": "[parameters('trigger1_properties_pipeline_parameters_pl_v_Blob_File')]",
+						"windowStartTime": "[parameters('trigger1_properties_pipeline_parameters_windowStartTime')]",
+						"windowEndTime": "[parameters('trigger1_properties_pipeline_parameters_windowEndTime')]",
+						"scheduledTime": "[parameters('trigger1_properties_pipeline_parameters_scheduledTime')]",
+						"startTime": "[parameters('trigger1_properties_pipeline_parameters_startTime')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 5,
+					"startTime": "2022-04-06T01:15:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[variables('factoryId')]",
+				"[concat(variables('factoryId'), '/pipelines/pipeline_json_to_sqldb_logging')]"
 			]
 		},
 		{

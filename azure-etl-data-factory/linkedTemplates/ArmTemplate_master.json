@@ -67,6 +67,42 @@
 			"type": "string",
 			"defaultValue": "/subscriptions/bac1dfaa-72b1-4035-944a-5b4a9b4c7d2b/resourceGroups/DP900/providers/Microsoft.Storage/storageAccounts/azurestorageacct"
 		},
+		"trigger1_properties_pipeline_parameters_pl_v_DBName": {
+			"type": "string",
+			"defaultValue": "ENTDWDB"
+		},
+		"trigger1_properties_pipeline_parameters_pl_v_TableName": {
+			"type": "string",
+			"defaultValue": "PipeLineExecution"
+		},
+		"trigger1_properties_pipeline_parameters_pl_v_Blob_Container": {
+			"type": "string",
+			"defaultValue": "azurecontainer"
+		},
+		"trigger1_properties_pipeline_parameters_pl_v_Blob_Directory": {
+			"type": "string",
+			"defaultValue": "Input"
+		},
+		"trigger1_properties_pipeline_parameters_pl_v_Blob_File": {
+			"type": "string",
+			"defaultValue": "employee.json"
+		},
+		"trigger1_properties_pipeline_parameters_windowStartTime": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowStartTime"
+		},
+		"trigger1_properties_pipeline_parameters_windowEndTime": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowEndTime"
+		},
+		"trigger1_properties_pipeline_parameters_scheduledTime": {
+			"type": "string",
+			"defaultValue": "@trigger().scheduledTime"
+		},
+		"trigger1_properties_pipeline_parameters_startTime": {
+			"type": "string",
+			"defaultValue": "@trigger().startTime"
+		},
 		"dataFactory_properties_globalParameters_Blob_Container_value": {
 			"type": "string",
 			"defaultValue": "azurecontainer"
@@ -209,6 +245,53 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'azure-etl-data-factory_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "azure-etl-data-factory_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"trigger1_properties_pipeline_parameters_pl_v_DBName": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_pl_v_DBName')]"
+					},
+					"trigger1_properties_pipeline_parameters_pl_v_TableName": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_pl_v_TableName')]"
+					},
+					"trigger1_properties_pipeline_parameters_pl_v_Blob_Container": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_pl_v_Blob_Container')]"
+					},
+					"trigger1_properties_pipeline_parameters_pl_v_Blob_Directory": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_pl_v_Blob_Directory')]"
+					},
+					"trigger1_properties_pipeline_parameters_pl_v_Blob_File": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_pl_v_Blob_File')]"
+					},
+					"trigger1_properties_pipeline_parameters_windowStartTime": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_windowStartTime')]"
+					},
+					"trigger1_properties_pipeline_parameters_windowEndTime": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_windowEndTime')]"
+					},
+					"trigger1_properties_pipeline_parameters_scheduledTime": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_scheduledTime')]"
+					},
+					"trigger1_properties_pipeline_parameters_startTime": {
+						"value": "[parameters('trigger1_properties_pipeline_parameters_startTime')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'azure-etl-data-factory_ArmTemplate_2')]"
 			]
 		}
 	]

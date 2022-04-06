@@ -7,37 +7,41 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "azure-etl-data-factory"
 		},
-		"EventTrigger_properties_pipeline3_parameters_pl_v_DBName": {
+		"trigger1_properties_pipeline_parameters_pl_v_DBName": {
 			"type": "string",
 			"defaultValue": "ENTDWDB"
 		},
-		"EventTrigger_properties_pipeline3_parameters_pl_v_TableName": {
+		"trigger1_properties_pipeline_parameters_pl_v_TableName": {
 			"type": "string",
-			"defaultValue": "persons"
+			"defaultValue": "PipeLineExecution"
 		},
-		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Container": {
+		"trigger1_properties_pipeline_parameters_pl_v_Blob_Container": {
 			"type": "string",
 			"defaultValue": "azurecontainer"
 		},
-		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Directory": {
+		"trigger1_properties_pipeline_parameters_pl_v_Blob_Directory": {
 			"type": "string",
-			"defaultValue": "JSON"
+			"defaultValue": "Input"
 		},
-		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Path_Trg": {
+		"trigger1_properties_pipeline_parameters_pl_v_Blob_File": {
 			"type": "string",
-			"defaultValue": "@triggerBody().folderPath"
+			"defaultValue": "employee.json"
 		},
-		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_File_Trg": {
+		"trigger1_properties_pipeline_parameters_windowStartTime": {
 			"type": "string",
-			"defaultValue": "@triggerBody().fileName"
+			"defaultValue": "@trigger().outputs.windowStartTime"
 		},
-		"EventTrigger_properties_pipeline3_parameters_pl_v_FileShare_Directory": {
+		"trigger1_properties_pipeline_parameters_windowEndTime": {
 			"type": "string",
-			"defaultValue": "SharedDrive"
+			"defaultValue": "@trigger().outputs.windowEndTime"
 		},
-		"EventTrigger_properties_typeProperties_scope": {
+		"trigger1_properties_pipeline_parameters_scheduledTime": {
 			"type": "string",
-			"defaultValue": "/subscriptions/bac1dfaa-72b1-4035-944a-5b4a9b4c7d2b/resourceGroups/DP900/providers/Microsoft.Storage/storageAccounts/azurestorageacct"
+			"defaultValue": "@trigger().scheduledTime"
+		},
+		"trigger1_properties_pipeline_parameters_startTime": {
+			"type": "string",
+			"defaultValue": "@trigger().startTime"
 		}
 	},
 	"variables": {
@@ -45,38 +49,40 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/EventTrigger')]",
+			"name": "[concat(parameters('factoryName'), '/trigger1')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "pipeline3",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"pl_v_DBName": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_DBName')]",
-							"pl_v_TableName": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_TableName')]",
-							"pl_v_Blob_Container": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Container')]",
-							"pl_v_Blob_Directory": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Directory')]",
-							"pl_v_Blob_Path_Trg": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Path_Trg')]",
-							"pl_v_Blob_File_Trg": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_File_Trg')]",
-							"pl_v_FileShare_Directory": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_FileShare_Directory')]"
-						}
+				"runtimeState": "Started",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "pipeline_json_to_sqldb_logging",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"pl_v_DBName": "[parameters('trigger1_properties_pipeline_parameters_pl_v_DBName')]",
+						"pl_v_TableName": "[parameters('trigger1_properties_pipeline_parameters_pl_v_TableName')]",
+						"pl_v_Blob_Container": "[parameters('trigger1_properties_pipeline_parameters_pl_v_Blob_Container')]",
+						"pl_v_Blob_Directory": "[parameters('trigger1_properties_pipeline_parameters_pl_v_Blob_Directory')]",
+						"pl_v_Blob_File": "[parameters('trigger1_properties_pipeline_parameters_pl_v_Blob_File')]",
+						"windowStartTime": "[parameters('trigger1_properties_pipeline_parameters_windowStartTime')]",
+						"windowEndTime": "[parameters('trigger1_properties_pipeline_parameters_windowEndTime')]",
+						"scheduledTime": "[parameters('trigger1_properties_pipeline_parameters_scheduledTime')]",
+						"startTime": "[parameters('trigger1_properties_pipeline_parameters_startTime')]"
 					}
-				],
-				"type": "BlobEventsTrigger",
+				},
+				"type": "TumblingWindowTrigger",
 				"typeProperties": {
-					"blobPathBeginsWith": "/azurecontainer/blobs/JSON/",
-					"blobPathEndsWith": ".json",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('EventTrigger_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
+					"frequency": "Minute",
+					"interval": 5,
+					"startTime": "2022-04-06T01:15:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
 				}
 			},
 			"dependsOn": []
