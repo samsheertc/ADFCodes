@@ -67,39 +67,39 @@
 			"type": "string",
 			"defaultValue": "/subscriptions/bac1dfaa-72b1-4035-944a-5b4a9b4c7d2b/resourceGroups/DP900/providers/Microsoft.Storage/storageAccounts/azurestorageacct"
 		},
-		"trigger1_properties_pipeline_parameters_pl_v_DBName": {
+		"TumblingTrigger_properties_pipeline_parameters_pl_v_DBName": {
 			"type": "string",
 			"defaultValue": "ENTDWDB"
 		},
-		"trigger1_properties_pipeline_parameters_pl_v_TableName": {
+		"TumblingTrigger_properties_pipeline_parameters_pl_v_TableName": {
 			"type": "string",
-			"defaultValue": "PipeLineExecution"
+			"defaultValue": "persons"
 		},
-		"trigger1_properties_pipeline_parameters_pl_v_Blob_Container": {
+		"TumblingTrigger_properties_pipeline_parameters_pl_v_Blob_Container": {
 			"type": "string",
 			"defaultValue": "azurecontainer"
 		},
-		"trigger1_properties_pipeline_parameters_pl_v_Blob_Directory": {
+		"TumblingTrigger_properties_pipeline_parameters_pl_v_Blob_Directory": {
 			"type": "string",
 			"defaultValue": "Input"
 		},
-		"trigger1_properties_pipeline_parameters_pl_v_Blob_File": {
+		"TumblingTrigger_properties_pipeline_parameters_pl_v_Blob_File": {
 			"type": "string",
 			"defaultValue": "employee.json"
 		},
-		"trigger1_properties_pipeline_parameters_windowStartTime": {
+		"TumblingTrigger_properties_pipeline_parameters_windowStartTime": {
 			"type": "string",
 			"defaultValue": "@trigger().outputs.windowStartTime"
 		},
-		"trigger1_properties_pipeline_parameters_windowEndTime": {
+		"TumblingTrigger_properties_pipeline_parameters_windowEndTime": {
 			"type": "string",
 			"defaultValue": "@trigger().outputs.windowEndTime"
 		},
-		"trigger1_properties_pipeline_parameters_scheduledTime": {
+		"TumblingTrigger_properties_pipeline_parameters_scheduledTime": {
 			"type": "string",
 			"defaultValue": "@trigger().scheduledTime"
 		},
-		"trigger1_properties_pipeline_parameters_startTime": {
+		"TumblingTrigger_properties_pipeline_parameters_startTime": {
 			"type": "string",
 			"defaultValue": "@trigger().startTime"
 		},
@@ -3421,7 +3421,7 @@
 					},
 					"pl_v_FileShare_Directory": {
 						"type": "string",
-						"defaultValue": "SharedDrive"
+						"defaultValue": "azurefileshare"
 					},
 					"pl_v_FileShare_File": {
 						"type": "string",
@@ -5561,7 +5561,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/trigger1')]",
+			"name": "[concat(parameters('factoryName'), '/TumblingTrigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -5573,22 +5573,22 @@
 						"type": "PipelineReference"
 					},
 					"parameters": {
-						"pl_v_DBName": "[parameters('trigger1_properties_pipeline_parameters_pl_v_DBName')]",
-						"pl_v_TableName": "[parameters('trigger1_properties_pipeline_parameters_pl_v_TableName')]",
-						"pl_v_Blob_Container": "[parameters('trigger1_properties_pipeline_parameters_pl_v_Blob_Container')]",
-						"pl_v_Blob_Directory": "[parameters('trigger1_properties_pipeline_parameters_pl_v_Blob_Directory')]",
-						"pl_v_Blob_File": "[parameters('trigger1_properties_pipeline_parameters_pl_v_Blob_File')]",
-						"windowStartTime": "[parameters('trigger1_properties_pipeline_parameters_windowStartTime')]",
-						"windowEndTime": "[parameters('trigger1_properties_pipeline_parameters_windowEndTime')]",
-						"scheduledTime": "[parameters('trigger1_properties_pipeline_parameters_scheduledTime')]",
-						"startTime": "[parameters('trigger1_properties_pipeline_parameters_startTime')]"
+						"pl_v_DBName": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_DBName')]",
+						"pl_v_TableName": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_TableName')]",
+						"pl_v_Blob_Container": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_Blob_Container')]",
+						"pl_v_Blob_Directory": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_Blob_Directory')]",
+						"pl_v_Blob_File": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_Blob_File')]",
+						"windowStartTime": "[parameters('TumblingTrigger_properties_pipeline_parameters_windowStartTime')]",
+						"windowEndTime": "[parameters('TumblingTrigger_properties_pipeline_parameters_windowEndTime')]",
+						"scheduledTime": "[parameters('TumblingTrigger_properties_pipeline_parameters_scheduledTime')]",
+						"startTime": "[parameters('TumblingTrigger_properties_pipeline_parameters_startTime')]"
 					}
 				},
 				"type": "TumblingWindowTrigger",
 				"typeProperties": {
 					"frequency": "Minute",
 					"interval": 5,
-					"startTime": "2022-04-06T01:15:00Z",
+					"startTime": "2022-04-06T01:55:00Z",
 					"delay": "00:00:00",
 					"maxConcurrency": 50,
 					"retryPolicy": {

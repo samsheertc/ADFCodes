@@ -50,31 +50,31 @@
 		"EventTrigger_properties_typeProperties_scope": {
 			"value": "/subscriptions/bac1dfaa-72b1-4035-944a-5b4a9b4c7d2b/resourceGroups/DP900/providers/Microsoft.Storage/storageAccounts/azurestorageacct"
 		},
-		"trigger1_properties_pipeline_parameters_pl_v_DBName": {
+		"TumblingTrigger_properties_pipeline_parameters_pl_v_DBName": {
 			"value": "ENTDWDB"
 		},
-		"trigger1_properties_pipeline_parameters_pl_v_TableName": {
-			"value": "PipeLineExecution"
+		"TumblingTrigger_properties_pipeline_parameters_pl_v_TableName": {
+			"value": "persons"
 		},
-		"trigger1_properties_pipeline_parameters_pl_v_Blob_Container": {
+		"TumblingTrigger_properties_pipeline_parameters_pl_v_Blob_Container": {
 			"value": "azurecontainer"
 		},
-		"trigger1_properties_pipeline_parameters_pl_v_Blob_Directory": {
+		"TumblingTrigger_properties_pipeline_parameters_pl_v_Blob_Directory": {
 			"value": "Input"
 		},
-		"trigger1_properties_pipeline_parameters_pl_v_Blob_File": {
+		"TumblingTrigger_properties_pipeline_parameters_pl_v_Blob_File": {
 			"value": "employee.json"
 		},
-		"trigger1_properties_pipeline_parameters_windowStartTime": {
+		"TumblingTrigger_properties_pipeline_parameters_windowStartTime": {
 			"value": "@trigger().outputs.windowStartTime"
 		},
-		"trigger1_properties_pipeline_parameters_windowEndTime": {
+		"TumblingTrigger_properties_pipeline_parameters_windowEndTime": {
 			"value": "@trigger().outputs.windowEndTime"
 		},
-		"trigger1_properties_pipeline_parameters_scheduledTime": {
+		"TumblingTrigger_properties_pipeline_parameters_scheduledTime": {
 			"value": "@trigger().scheduledTime"
 		},
-		"trigger1_properties_pipeline_parameters_startTime": {
+		"TumblingTrigger_properties_pipeline_parameters_startTime": {
 			"value": "@trigger().startTime"
 		},
 		"dataFactory_properties_globalParameters_Blob_Container_value": {
