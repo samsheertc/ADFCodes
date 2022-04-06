@@ -1,5 +1,5 @@
 {
-	"name": "pipeline_cashed_sink",
+	"name": "pipeline_cached_sink",
 	"properties": {
 		"activities": [
 			{
