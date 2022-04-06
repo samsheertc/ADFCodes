@@ -2,7 +2,7 @@
 	"name": "trigger1",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipeline": {
 			"pipelineReference": {
 				"referenceName": "pipeline_json_to_sqldb_logging",
@@ -10,7 +10,7 @@
 			},
 			"parameters": {
 				"pl_v_DBName": "ENTDWDB",
-				"pl_v_TableName": "PipeLineExecution",
+				"pl_v_TableName": "persons",
 				"pl_v_Blob_Container": "azurecontainer",
 				"pl_v_Blob_Directory": "Input",
 				"pl_v_Blob_File": "employee.json",
