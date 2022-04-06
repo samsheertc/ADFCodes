@@ -33,7 +33,8 @@
 								"type": "Expression"
 							}
 						}
-					}
+					},
+					"firstRowOnly": true
 				}
 			},
 			{
