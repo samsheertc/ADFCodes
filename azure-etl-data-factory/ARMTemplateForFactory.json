@@ -1493,7 +1493,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/pipeline_cashed_sink')]",
+			"name": "[concat(parameters('factoryName'), '/pipeline_cached_sink')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1512,7 +1512,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "dataflow_cashed_sink",
+								"referenceName": "dataflow_cached_sink",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -1525,11 +1525,16 @@
 										"ds_v_Blob_Directory": "Input",
 										"ds_v_Blob_File": "employees.csv"
 									},
+									"source3": {
+										"ds_v_DBName": "entdwdb",
+										"ds_v_TableName": "countrycode"
+									},
 									"sink1": {},
 									"sink2": {
 										"ds_v_DBName": "ENTDWDB",
 										"ds_v_TableName": "tbl_employees"
-									}
+									},
+									"sink3": {}
 								}
 							},
 							"staging": {},
@@ -1552,7 +1557,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/dataflows/dataflow_cashed_sink')]"
+				"[concat(variables('factoryId'), '/dataflows/dataflow_cached_sink')]"
 			]
 		},
 		{
@@ -5148,7 +5153,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dataflow_cashed_sink')]",
+			"name": "[concat(parameters('factoryName'), '/dataflow_cached_sink')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -5168,6 +5173,13 @@
 								"type": "DatasetReference"
 							},
 							"name": "source2"
+						},
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable",
+								"type": "DatasetReference"
+							},
+							"name": "source3"
 						}
 					],
 					"sinks": [
@@ -5180,6 +5192,9 @@
 								"type": "DatasetReference"
 							},
 							"name": "sink2"
+						},
+						{
+							"name": "sink3"
 						}
 					],
 					"transformations": [
@@ -5208,10 +5223,19 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> source2",
+						"source(output(",
+						"          country_code as string,",
+						"          country_name as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source3",
 						"source2 keyGenerate(output(empid as long),",
 						"     startAt: 1L,",
 						"     stepValue: 1L) ~> surrogateKey1",
-						"surrogateKey1 derive(empid = sink1#outputs()[1].maxempid + empid) ~> derivedColumn1",
+						"surrogateKey1 derive(empid = sink1#outputs()[1].maxempid + empid,",
+						"          country = sink3#lookup(country).country_name) ~> derivedColumn1",
 						"source1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     skipDuplicateMapInputs: true,",
@@ -5232,7 +5256,20 @@
 						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink2"
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink2",
+						"source3 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     keys:['country_code'],",
+						"     store: 'cache',",
+						"     format: 'inline',",
+						"     output: false,",
+						"     saveOrder: 1,",
+						"     mapColumn(",
+						"          country_code,",
+						"          country_name",
+						"     )) ~> sink3"
 					]
 				}
 			},
