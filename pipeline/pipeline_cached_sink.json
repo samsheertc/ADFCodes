@@ -30,7 +30,7 @@
 							},
 							"source3": {
 								"ds_v_DBName": "entdwdb",
-								"ds_v_TableName": "tbl_employee"
+								"ds_v_TableName": "countrycode"
 							},
 							"sink2": {
 								"ds_v_DBName": "ENTDWDB",
