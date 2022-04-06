@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase'"
 		},
+		"AzureSqlDatabase1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		},
 		"dataFactory_properties_globalParameters_Blob_Container_value": {
 			"type": "string",
 			"defaultValue": "azurecontainer"
@@ -38,10 +42,6 @@
 		"AzureKeyVault_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://MY-AZURE-KEYVAULT.vault.azure.net/"
-		},
-		"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "sec-myazurekeyvault"
 		}
 	},
 	"variables": {
@@ -468,6 +468,24 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"ls_v_DBName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SelfHostedIR')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -574,11 +592,8 @@
 										}
 									},
 									"linkedServiceName": {
-										"referenceName": "AzureSqlDatabase",
-										"type": "LinkedServiceReference",
-										"parameters": {
-											"ls_v_DBName": "ENTDWDB"
-										}
+										"referenceName": "AzureSqlDatabase1",
+										"type": "LinkedServiceReference"
 									}
 								}
 							]
@@ -596,16 +611,16 @@
 				"lastPublishTime": "2022-03-29T15:04:47Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureSQLServer')]",
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase",
+					"referenceName": "AzureSqlDatabase1",
 					"type": "LinkedServiceReference",
 					"parameters": {
 						"ls_v_DBName": {
@@ -626,7 +641,7 @@
 					"name": "DB"
 				},
 				"annotations": [],
-				"type": "SqlServerTable",
+				"type": "AzureSqlTable",
 				"schema": [],
 				"typeProperties": {
 					"schema": "dbo",
@@ -637,7 +652,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
 			]
 		},
 		{
@@ -968,29 +983,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlobStorageKeyVault')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "AzureKeyVault",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "[parameters('AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName')]",
-						"secretVersion": "ac14171fea194955a3990550272e6f50"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureKeyVault')]"
 			]
 		}
 	]

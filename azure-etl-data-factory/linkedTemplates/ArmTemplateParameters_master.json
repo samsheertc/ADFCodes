@@ -14,6 +14,9 @@
 		"AzureSqlDatabase_connectionString": {
 			"value": ""
 		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": ""
+		},
 		"MySqlDB_connectionString": {
 			"value": ""
 		},

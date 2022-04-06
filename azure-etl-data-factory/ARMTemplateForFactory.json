@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase'"
 		},
+		"AzureSqlDatabase1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		},
 		"MySqlDB_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'MySqlDB'"
@@ -263,11 +267,8 @@
 										}
 									},
 									"linkedServiceName": {
-										"referenceName": "AzureSqlDatabase",
-										"type": "LinkedServiceReference",
-										"parameters": {
-											"ls_v_DBName": "ENTDWDB"
-										}
+										"referenceName": "AzureSqlDatabase1",
+										"type": "LinkedServiceReference"
 									}
 								}
 							]
@@ -286,7 +287,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
 			]
 		},
 		{
@@ -763,7 +764,7 @@
 											}
 										},
 										"sink": {
-											"type": "SqlServerSink",
+											"type": "AzureSqlSink",
 											"writeBehavior": "insert",
 											"sqlWriterUseTableLock": false
 										},
@@ -816,7 +817,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "AzureSQLServer",
+											"referenceName": "AzureSqlTable",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_DBName": {
@@ -918,7 +919,7 @@
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]",
 				"[concat(variables('factoryId'), '/datasets/CSV_File_Dataset')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]"
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]"
 			]
 		},
 		{
@@ -2096,7 +2097,7 @@
 								}
 							},
 							"sink": {
-								"type": "SqlServerSink",
+								"type": "AzureSqlSink",
 								"writeBehavior": "insert",
 								"sqlWriterUseTableLock": false
 							},
@@ -2149,17 +2150,11 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "AzureSQLServer",
+								"referenceName": "AzureSqlTable",
 								"type": "DatasetReference",
 								"parameters": {
-									"ds_v_DBName": {
-										"value": "@pipeline().parameters.pl_v_DBName",
-										"type": "Expression"
-									},
-									"ds_v_TableName": {
-										"value": "@pipeline().parameters.pl_v_TableName",
-										"type": "Expression"
-									}
+									"ds_v_DBName": "sss",
+									"ds_v_TableName": "sss"
 								}
 							}
 						]
@@ -2200,7 +2195,7 @@
 			"dependsOn": [
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]"
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]"
 			]
 		},
 		{
@@ -2234,7 +2229,7 @@
 								}
 							},
 							"sink": {
-								"type": "SqlServerSink",
+								"type": "AzureSqlSink",
 								"writeBehavior": "insert",
 								"sqlWriterUseTableLock": false
 							},
@@ -2287,17 +2282,11 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "AzureSQLServer",
+								"referenceName": "AzureSqlTable",
 								"type": "DatasetReference",
 								"parameters": {
-									"ds_v_DBName": {
-										"value": "@pipeline().parameters.pl_v_DBName",
-										"type": "Expression"
-									},
-									"ds_v_TableName": {
-										"value": "@pipeline().parameters.pl_v_TableName",
-										"type": "Expression"
-									}
+									"ds_v_DBName": "ss",
+									"ds_v_TableName": "ss"
 								}
 							}
 						]
@@ -2425,13 +2414,10 @@
 							}
 						},
 						"linkedServiceName": {
-							"referenceName": "AzureSqlDatabase",
+							"referenceName": "AzureSqlDatabase1",
 							"type": "LinkedServiceReference",
 							"parameters": {
-								"ls_v_DBName": {
-									"value": "@pipeline().parameters.pl_v_DBName",
-									"type": "Expression"
-								}
+								"ls_v_DBName": "ENTDWDB"
 							}
 						}
 					}
@@ -2478,8 +2464,8 @@
 			"dependsOn": [
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
 			]
 		},
 		{
@@ -2502,22 +2488,16 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlServerSource",
+								"type": "AzureSqlSource",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "AzureSQLServer",
+								"referenceName": "AzureSqlTable",
 								"type": "DatasetReference",
 								"parameters": {
-									"ds_v_DBName": {
-										"value": "@pipeline().parameters.pl_v_DBName",
-										"type": "Expression"
-									},
-									"ds_v_TableName": {
-										"value": "@pipeline().parameters.pl_v_TableName",
-										"type": "Expression"
-									}
+									"ds_v_DBName": "sss",
+									"ds_v_TableName": "sss"
 								}
 							}
 						}
@@ -2640,7 +2620,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]",
 				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]"
 			]
 		},
@@ -2664,22 +2644,16 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlServerSource",
+								"type": "AzureSqlSource",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "AzureSQLServer",
+								"referenceName": "AzureSqlTable",
 								"type": "DatasetReference",
 								"parameters": {
-									"ds_v_DBName": {
-										"value": "@pipeline().parameters.pl_v_DBName",
-										"type": "Expression"
-									},
-									"ds_v_TableName": {
-										"value": "@pipeline().parameters.pl_v_TableName",
-										"type": "Expression"
-									}
+									"ds_v_DBName": "ss",
+									"ds_v_TableName": "sss"
 								}
 							},
 							"firstRowOnly": false
@@ -2815,7 +2789,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]",
 				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]"
 			]
 		},
@@ -3283,8 +3257,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderQuery": "select * from [dbo].[persons]",
+								"type": "AzureSqlSource",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -3306,60 +3279,43 @@
 									{
 										"source": {
 											"name": "id",
-											"type": "Int32",
-											"physicalType": "int"
+											"type": "Int32"
 										},
 										"sink": {
 											"type": "String",
-											"physicalType": "String",
 											"ordinal": 1
 										}
 									},
 									{
 										"source": {
 											"name": "fullname",
-											"type": "String",
-											"physicalType": "varchar"
+											"type": "String"
 										},
 										"sink": {
 											"type": "String",
-											"physicalType": "String",
 											"ordinal": 2
 										}
 									},
 									{
 										"source": {
 											"name": "location_city",
-											"type": "String",
-											"physicalType": "varchar"
+											"type": "String"
 										},
 										"sink": {
 											"type": "String",
-											"physicalType": "String",
 											"ordinal": 3
 										}
 									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
+								]
 							}
 						},
 						"inputs": [
 							{
-								"referenceName": "AzureSQLServer",
+								"referenceName": "AzureSqlTable",
 								"type": "DatasetReference",
 								"parameters": {
-									"ds_v_DBName": {
-										"value": "@pipeline().parameters.pl_v_DBName",
-										"type": "Expression"
-									},
-									"ds_v_TableName": {
-										"value": "@pipeline().parameters.pl_v_TableName",
-										"type": "Expression"
-									}
+									"ds_v_DBName": "ss",
+									"ds_v_TableName": "ss"
 								}
 							}
 						],
@@ -3411,7 +3367,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]",
 				"[concat(variables('factoryId'), '/datasets/CSV_File_Dataset')]"
 			]
 		},
@@ -3435,8 +3391,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderQuery": "select * from [dbo].[persons]",
+								"type": "AzureSqlSource",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -3456,60 +3411,43 @@
 									{
 										"source": {
 											"name": "id",
-											"type": "Int32",
-											"physicalType": "int"
+											"type": "Int32"
 										},
 										"sink": {
 											"name": "id",
-											"type": "Int32",
-											"physicalType": "INT_32"
+											"type": "Int32"
 										}
 									},
 									{
 										"source": {
 											"name": "fullname",
-											"type": "String",
-											"physicalType": "varchar"
+											"type": "String"
 										},
 										"sink": {
 											"name": "fullname",
-											"type": "String",
-											"physicalType": "UTF8"
+											"type": "String"
 										}
 									},
 									{
 										"source": {
 											"name": "location_city",
-											"type": "String",
-											"physicalType": "varchar"
+											"type": "String"
 										},
 										"sink": {
 											"name": "location_city",
-											"type": "String",
-											"physicalType": "UTF8"
+											"type": "String"
 										}
 									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
+								]
 							}
 						},
 						"inputs": [
 							{
-								"referenceName": "AzureSQLServer",
+								"referenceName": "AzureSqlTable",
 								"type": "DatasetReference",
 								"parameters": {
-									"ds_v_DBName": {
-										"value": "@pipeline().parameters.pl_v_DBName",
-										"type": "Expression"
-									},
-									"ds_v_TableName": {
-										"value": "@pipeline().parameters.pl_v_TableName",
-										"type": "Expression"
-									}
+									"ds_v_DBName": "ss",
+									"ds_v_TableName": "ss"
 								}
 							}
 						],
@@ -3569,7 +3507,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]",
 				"[concat(variables('factoryId'), '/datasets/Parquet_File_Dataset')]"
 			]
 		},
@@ -4054,12 +3992,12 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureSQLServer')]",
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase",
+					"referenceName": "AzureSqlDatabase1",
 					"type": "LinkedServiceReference",
 					"parameters": {
 						"ls_v_DBName": {
@@ -4080,7 +4018,7 @@
 					"name": "DB"
 				},
 				"annotations": [],
-				"type": "SqlServerTable",
+				"type": "AzureSqlTable",
 				"schema": [],
 				"typeProperties": {
 					"schema": "dbo",
@@ -4092,7 +4030,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
 			]
 		},
 		{
@@ -4597,6 +4535,26 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"ls_v_DBName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabase1_connectionString')]"
+				}
+			},
+			"dependsOn": [
+				"[variables('factoryId')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/MySqlDB')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -5047,7 +5005,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "AzureSQLServer",
+								"referenceName": "AzureSqlTable",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -5081,6 +5039,7 @@
 						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
 						"     mapColumn(",
 						"          EmpID = ID,",
 						"          EmpName = Name,",
@@ -5094,7 +5053,7 @@
 			"dependsOn": [
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]"
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]"
 			]
 		},
 		{
@@ -5107,7 +5066,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "AzureSQLServer",
+								"referenceName": "AzureSqlTable",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -5126,7 +5085,7 @@
 						},
 						{
 							"dataset": {
-								"referenceName": "AzureSQLServer",
+								"referenceName": "AzureSqlTable",
 								"type": "DatasetReference"
 							},
 							"name": "sink2"
@@ -5147,7 +5106,7 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     query: 'select max(empid) as maxempid from ENTDWDB.[dbo].[tbl_employees]',",
+						"     query: 'select ISNULL(max(empid),0) maxempid from ENTDWDB.[dbo].[tbl_employees]\\n',",
 						"     format: 'query') ~> source1",
 						"source(output(",
 						"          empname as string,",
@@ -5161,7 +5120,7 @@
 						"source2 keyGenerate(output(empid as long),",
 						"     startAt: 1L,",
 						"     stepValue: 1L) ~> surrogateKey1",
-						"surrogateKey1 derive(empid = sink1#outputs()[1].maxempid) ~> derivedColumn1",
+						"surrogateKey1 derive(empid = sink1#outputs()[1].maxempid + empid) ~> derivedColumn1",
 						"source1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     skipDuplicateMapInputs: true,",
@@ -5181,13 +5140,14 @@
 						"     upsertable:false,",
 						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> sink2"
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink2"
 					]
 				}
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSQLServer')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]",
 				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]"
 			]
 		},
