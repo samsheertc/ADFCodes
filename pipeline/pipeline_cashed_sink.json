@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow_cashed_sink",
+						"referenceName": "dataflow_cached_sink",
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"source1": {

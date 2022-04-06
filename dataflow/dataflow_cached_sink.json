@@ -1,5 +1,5 @@
 {
-	"name": "dataflow_cashed_sink",
+	"name": "dataflow_cached_sink",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
