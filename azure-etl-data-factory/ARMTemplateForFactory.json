@@ -2655,8 +2655,14 @@
 								"referenceName": "AzureSqlTable",
 								"type": "DatasetReference",
 								"parameters": {
-									"ds_v_DBName": "ss",
-									"ds_v_TableName": "sss"
+									"ds_v_DBName": {
+										"value": "@pipeline().parameters.pl_v_DBName",
+										"type": "Expression"
+									},
+									"ds_v_TableName": {
+										"value": "@pipeline().parameters.pl_v_TableName",
+										"type": "Expression"
+									}
 								}
 							},
 							"firstRowOnly": false
