@@ -27,6 +27,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Oracle11G'"
 		},
+		"AzureSqlDatabase_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase'"
+		},
 		"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "sec-myazurekeyvault"
@@ -299,7 +303,7 @@
 										}
 									},
 									"linkedServiceName": {
-										"referenceName": "AzureSqlDatabase1",
+										"referenceName": "AzureSqlDatabase",
 										"type": "LinkedServiceReference",
 										"parameters": {
 											"ls_v_DBName": "ENTDWDB"
@@ -322,7 +326,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
 			]
 		},
 		{
@@ -4066,7 +4070,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
+					"referenceName": "AzureSqlDatabase",
 					"type": "LinkedServiceReference",
 					"parameters": {
 						"ls_v_DBName": {
@@ -4099,7 +4103,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
 			]
 		},
 		{
@@ -4687,6 +4691,48 @@
 			"dependsOn": [
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/pipelines/pipeline3')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TumblingTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "pipeline_json_to_sqldb_logging",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"pl_v_DBName": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_DBName')]",
+						"pl_v_TableName": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_TableName')]",
+						"pl_v_Blob_Container": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_Blob_Container')]",
+						"pl_v_Blob_Directory": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_Blob_Directory')]",
+						"pl_v_Blob_File": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_Blob_File')]",
+						"windowStartTime": "[parameters('TumblingTrigger_properties_pipeline_parameters_windowStartTime')]",
+						"windowEndTime": "[parameters('TumblingTrigger_properties_pipeline_parameters_windowEndTime')]",
+						"scheduledTime": "[parameters('TumblingTrigger_properties_pipeline_parameters_scheduledTime')]",
+						"startTime": "[parameters('TumblingTrigger_properties_pipeline_parameters_startTime')]"
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Minute",
+					"interval": 5,
+					"startTime": "2022-04-06T01:55:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[variables('factoryId')]",
+				"[concat(variables('factoryId'), '/pipelines/pipeline_json_to_sqldb_logging')]"
 			]
 		},
 		{
@@ -5561,45 +5607,23 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TumblingTrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "pipeline_json_to_sqldb_logging",
-						"type": "PipelineReference"
-					},
-					"parameters": {
-						"pl_v_DBName": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_DBName')]",
-						"pl_v_TableName": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_TableName')]",
-						"pl_v_Blob_Container": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_Blob_Container')]",
-						"pl_v_Blob_Directory": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_Blob_Directory')]",
-						"pl_v_Blob_File": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_Blob_File')]",
-						"windowStartTime": "[parameters('TumblingTrigger_properties_pipeline_parameters_windowStartTime')]",
-						"windowEndTime": "[parameters('TumblingTrigger_properties_pipeline_parameters_windowEndTime')]",
-						"scheduledTime": "[parameters('TumblingTrigger_properties_pipeline_parameters_scheduledTime')]",
-						"startTime": "[parameters('TumblingTrigger_properties_pipeline_parameters_startTime')]"
+				"parameters": {
+					"ls_v_DBName": {
+						"type": "string"
 					}
 				},
-				"type": "TumblingWindowTrigger",
+				"annotations": [],
+				"type": "AzureSqlDatabase",
 				"typeProperties": {
-					"frequency": "Minute",
-					"interval": 5,
-					"startTime": "2022-04-06T01:55:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": []
+					"connectionString": "[parameters('AzureSqlDatabase_connectionString')]"
 				}
 			},
 			"dependsOn": [
-				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/pipelines/pipeline_json_to_sqldb_logging')]"
+				"[variables('factoryId')]"
 			]
 		},
 		{

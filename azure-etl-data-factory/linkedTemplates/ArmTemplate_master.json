@@ -27,6 +27,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Oracle11G'"
 		},
+		"AzureSqlDatabase_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase'"
+		},
 		"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "sec-myazurekeyvault"
@@ -155,6 +159,9 @@
 					"AzureSqlDatabase1_connectionString": {
 						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
 					},
+					"AzureSqlDatabase_connectionString": {
+						"value": "[parameters('AzureSqlDatabase_connectionString')]"
+					},
 					"dataFactory_properties_globalParameters_Blob_Container_value": {
 						"value": "[parameters('dataFactory_properties_globalParameters_Blob_Container_value')]"
 					},
@@ -169,9 +176,6 @@
 					},
 					"AzureKeyVault_properties_typeProperties_baseUrl": {
 						"value": "[parameters('AzureKeyVault_properties_typeProperties_baseUrl')]"
-					},
-					"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -196,6 +200,9 @@
 					},
 					"Oracle11G_connectionString": {
 						"value": "[parameters('Oracle11G_connectionString')]"
+					},
+					"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -211,6 +218,26 @@
 				"mode": "incremental",
 				"templateLink": {
 					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'azure-etl-data-factory_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "azure-etl-data-factory_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
 					"contentVersion": "1.0.0.0"
 				},
 				"parameters": {
@@ -240,26 +267,6 @@
 					},
 					"EventTrigger_properties_typeProperties_scope": {
 						"value": "[parameters('EventTrigger_properties_typeProperties_scope')]"
-					}
-				}
-			},
-			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'azure-etl-data-factory_ArmTemplate_1')]"
-			]
-		},
-		{
-			"name": "azure-etl-data-factory_ArmTemplate_3",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
-			"properties": {
-				"mode": "incremental",
-				"templateLink": {
-					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters": {
-					"factoryName": {
-						"value": "[parameters('factoryName')]"
 					},
 					"TumblingTrigger_properties_pipeline_parameters_pl_v_DBName": {
 						"value": "[parameters('TumblingTrigger_properties_pipeline_parameters_pl_v_DBName')]"

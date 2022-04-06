@@ -20,6 +20,9 @@
 		"Oracle11G_connectionString": {
 			"value": ""
 		},
+		"AzureSqlDatabase_connectionString": {
+			"value": ""
+		},
 		"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
 			"value": "sec-myazurekeyvault"
 		},
