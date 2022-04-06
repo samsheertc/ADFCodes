@@ -2501,7 +2501,8 @@
 										"type": "Expression"
 									}
 								}
-							}
+							},
+							"firstRowOnly": true
 						}
 					},
 					{
