@@ -113,7 +113,7 @@
 			},
 			"pl_v_FileShare_Directory": {
 				"type": "string",
-				"defaultValue": "azurefileshare"
+				"defaultValue": "SharedDrive"
 			},
 			"pl_v_FileShare_File": {
 				"type": "string",
