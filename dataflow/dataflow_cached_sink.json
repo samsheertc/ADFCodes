@@ -28,7 +28,7 @@
 			],
 			"sinks": [
 				{
-					"name": "sink1"
+					"name": "MaxEmpID"
 				},
 				{
 					"dataset": {
@@ -38,7 +38,7 @@
 					"name": "sink2"
 				},
 				{
-					"name": "sink3"
+					"name": "CountryName"
 				}
 			],
 			"transformations": [
@@ -56,7 +56,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     query: 'select ISNULL(max(empid),0) maxempid from ENTDWDB.[dbo].[tbl_employees]\\n',",
+				"     query: 'select ISNULL(max(empid),0) maxempid from ENTDWDB.[dbo].[tbl_employee]\\n',",
 				"     format: 'query') ~> source1",
 				"source(output(",
 				"          empname as string,",
@@ -78,8 +78,8 @@
 				"source2 keyGenerate(output(empid as long),",
 				"     startAt: 1L,",
 				"     stepValue: 1L) ~> surrogateKey1",
-				"surrogateKey1 derive(empid = sink1#outputs()[1].maxempid + empid,",
-				"          country = sink3#lookup(country).country_name) ~> derivedColumn1",
+				"surrogateKey1 derive(empid = MaxEmpID#outputs()[1].maxempid + empid,",
+				"          country = CountryName#lookup(country).country_name) ~> derivedColumn1",
 				"source1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
@@ -90,7 +90,7 @@
 				"     saveOrder: 1,",
 				"     mapColumn(",
 				"          maxempid",
-				"     )) ~> sink1",
+				"     )) ~> MaxEmpID",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -113,7 +113,7 @@
 				"     mapColumn(",
 				"          country_code,",
 				"          country_name",
-				"     )) ~> sink3"
+				"     )) ~> CountryName"
 			]
 		}
 	}
