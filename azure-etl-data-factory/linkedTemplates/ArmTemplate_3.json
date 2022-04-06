@@ -7,38 +7,6 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "azure-etl-data-factory"
 		},
-		"EventTrigger_properties_pipeline3_parameters_pl_v_DBName": {
-			"type": "string",
-			"defaultValue": "ENTDWDB"
-		},
-		"EventTrigger_properties_pipeline3_parameters_pl_v_TableName": {
-			"type": "string",
-			"defaultValue": "persons"
-		},
-		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Container": {
-			"type": "string",
-			"defaultValue": "azurecontainer"
-		},
-		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Directory": {
-			"type": "string",
-			"defaultValue": "JSON"
-		},
-		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Path_Trg": {
-			"type": "string",
-			"defaultValue": "@triggerBody().folderPath"
-		},
-		"EventTrigger_properties_pipeline3_parameters_pl_v_Blob_File_Trg": {
-			"type": "string",
-			"defaultValue": "@triggerBody().fileName"
-		},
-		"EventTrigger_properties_pipeline3_parameters_pl_v_FileShare_Directory": {
-			"type": "string",
-			"defaultValue": "SharedDrive"
-		},
-		"EventTrigger_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/bac1dfaa-72b1-4035-944a-5b4a9b4c7d2b/resourceGroups/DP900/providers/Microsoft.Storage/storageAccounts/azurestorageacct"
-		},
 		"TumblingTrigger_properties_pipeline_parameters_pl_v_DBName": {
 			"type": "string",
 			"defaultValue": "ENTDWDB"
@@ -80,43 +48,6 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/EventTrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "pipeline3",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"pl_v_DBName": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_DBName')]",
-							"pl_v_TableName": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_TableName')]",
-							"pl_v_Blob_Container": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Container')]",
-							"pl_v_Blob_Directory": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Directory')]",
-							"pl_v_Blob_Path_Trg": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_Path_Trg')]",
-							"pl_v_Blob_File_Trg": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_Blob_File_Trg')]",
-							"pl_v_FileShare_Directory": "[parameters('EventTrigger_properties_pipeline3_parameters_pl_v_FileShare_Directory')]"
-						}
-					}
-				],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/azurecontainer/blobs/JSON/",
-					"blobPathEndsWith": ".json",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('EventTrigger_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
-				}
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/TumblingTrigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
