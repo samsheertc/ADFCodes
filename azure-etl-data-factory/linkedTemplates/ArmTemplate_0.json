@@ -575,7 +575,10 @@
 									},
 									"linkedServiceName": {
 										"referenceName": "AzureSqlDatabase1",
-										"type": "LinkedServiceReference"
+										"type": "LinkedServiceReference",
+										"parameters": {
+											"ls_v_DBName": "ENTDWDB"
+										}
 									}
 								}
 							]
