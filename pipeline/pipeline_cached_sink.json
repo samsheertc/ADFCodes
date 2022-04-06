@@ -28,6 +28,10 @@
 								"ds_v_Blob_Directory": "Input",
 								"ds_v_Blob_File": "employees.csv"
 							},
+							"source3": {
+								"ds_v_DBName": "entdwdb",
+								"ds_v_TableName": "tbl_employee"
+							},
 							"sink2": {
 								"ds_v_DBName": "ENTDWDB",
 								"ds_v_TableName": "tbl_employees"
