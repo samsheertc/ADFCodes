@@ -11,6 +11,9 @@
 		"AzureFileStorage_connectionString": {
 			"value": ""
 		},
+		"AzureSqlDatabase_connectionString": {
+			"value": ""
+		},
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
 		},
@@ -18,9 +21,6 @@
 			"value": ""
 		},
 		"Oracle11G_connectionString": {
-			"value": ""
-		},
-		"AzureSqlDatabase_connectionString": {
 			"value": ""
 		},
 		"AzureBlobStorageKeyVault_properties_typeProperties_connectionString_secretName": {
