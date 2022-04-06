@@ -21,7 +21,7 @@
 						"datasetParameters": {
 							"source1": {
 								"ds_v_DBName": "ENTDWDB",
-								"ds_v_TableName": "tbl_employees"
+								"ds_v_TableName": "tbl_employee"
 							},
 							"source2": {
 								"ds_v_Blob_Container": "azurecontainer",
@@ -30,11 +30,11 @@
 							},
 							"source3": {
 								"ds_v_DBName": "entdwdb",
-								"ds_v_TableName": "countrycode"
+								"ds_v_TableName": "tbl_country"
 							},
 							"sink2": {
 								"ds_v_DBName": "ENTDWDB",
-								"ds_v_TableName": "tbl_employees"
+								"ds_v_TableName": "tbl_employee"
 							}
 						}
 					},
