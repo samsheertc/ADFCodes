@@ -3,23 +3,6 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Stopped",
-		"pipeline": {
-			"pipelineReference": {
-				"referenceName": "pipeline_json_to_sqldb_logging",
-				"type": "PipelineReference"
-			},
-			"parameters": {
-				"pl_v_DBName": "ENTDWDB",
-				"pl_v_TableName": "persons",
-				"pl_v_Blob_Container": "azurecontainer",
-				"pl_v_Blob_Directory": "Input",
-				"pl_v_Blob_File": "employee.json",
-				"windowStartTime": "@trigger().outputs.windowStartTime",
-				"windowEndTime": "@trigger().outputs.windowEndTime",
-				"scheduledTime": "@trigger().scheduledTime",
-				"startTime": "@trigger().startTime"
-			}
-		},
 		"type": "TumblingWindowTrigger",
 		"typeProperties": {
 			"frequency": "Minute",
