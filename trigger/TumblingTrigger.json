@@ -1,0 +1,36 @@
+{
+	"name": "TumblingTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "pipeline_json_to_sqldb_logging",
+				"type": "PipelineReference"
+			},
+			"parameters": {
+				"pl_v_DBName": "ENTDWDB",
+				"pl_v_TableName": "persons",
+				"pl_v_Blob_Container": "azurecontainer",
+				"pl_v_Blob_Directory": "Input",
+				"pl_v_Blob_File": "employee.json",
+				"windowStartTime": "@trigger().outputs.windowStartTime",
+				"windowEndTime": "@trigger().outputs.windowEndTime",
+				"scheduledTime": "@trigger().scheduledTime",
+				"startTime": "@trigger().startTime"
+			}
+		},
+		"type": "TumblingWindowTrigger",
+		"typeProperties": {
+			"frequency": "Minute",
+			"interval": 5,
+			"startTime": "2022-04-06T01:55:00Z",
+			"delay": "00:00:00",
+			"maxConcurrency": 50,
+			"retryPolicy": {
+				"intervalInSeconds": 30
+			},
+			"dependsOn": []
+		}
+	}
+}
