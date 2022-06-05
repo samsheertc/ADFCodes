@@ -6,7 +6,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "CSV_Blob_DataSet",
+						"referenceName": "AzureBlobCSV",
 						"type": "DatasetReference"
 					},
 					"name": "source1"

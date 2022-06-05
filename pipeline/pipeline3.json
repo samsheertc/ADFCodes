@@ -178,7 +178,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "JSON_Blob_Dataset",
+									"referenceName": "AzureBlobJSON",
 									"type": "DatasetReference",
 									"parameters": {
 										"ds_v_Blob_Container": {
@@ -273,7 +273,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "JSON_Blob_Dataset",
+									"referenceName": "AzureBlobJSON",
 									"type": "DatasetReference",
 									"parameters": {
 										"ds_v_Blob_Container": {

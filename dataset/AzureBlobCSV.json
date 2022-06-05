@@ -1,5 +1,5 @@
 {
-	"name": "CSV_Blob_DataSet1",
+	"name": "AzureBlobCSV",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage",

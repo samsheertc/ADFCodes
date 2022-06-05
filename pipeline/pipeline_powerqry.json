@@ -37,7 +37,7 @@
 								{
 									"name": "UserQueryCSVBlobDataSet",
 									"dataset": {
-										"referenceName": "CSV_Blob_DataSet",
+										"referenceName": "AzureBlobCSV",
 										"type": "DatasetReference",
 										"parameters": {
 											"ds_v_Blob_Container": "azurecontainer",
