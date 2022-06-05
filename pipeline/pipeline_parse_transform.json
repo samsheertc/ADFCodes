@@ -22,11 +22,6 @@
 							"source1": {
 								"ds_v_DBName": "entdwdb",
 								"ds_v_TableName": "tbl_employee"
-							},
-							"sink1": {
-								"ds_v_Blob_Container": "azurecontainer",
-								"ds_v_Blob_Directory": "Output",
-								"ds_v_Blob_File": "employees.csv"
 							}
 						}
 					},
