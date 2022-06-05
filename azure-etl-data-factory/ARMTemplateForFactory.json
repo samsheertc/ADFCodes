@@ -737,7 +737,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "JSON_Blob_Dataset",
+											"referenceName": "AzureBlobJSON",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_Blob_Container": {
@@ -832,7 +832,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "JSON_Blob_Dataset",
+											"referenceName": "AzureBlobJSON",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_Blob_Container": {
@@ -952,7 +952,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]",
+				"[concat(variables('factoryId'), '/datasets/AzureBlobJSON')]",
 				"[concat(variables('factoryId'), '/datasets/CSV_File_Dataset')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]"
 			]
@@ -1121,7 +1121,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -1191,7 +1191,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]",
+				"[concat(variables('factoryId'), '/datasets/AzureBlobJSON')]",
 				"[concat(variables('factoryId'), '/datasets/CSV_File_Dataset')]"
 			]
 		},
@@ -1226,7 +1226,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataset": {
-											"referenceName": "JSON_Blob_Dataset",
+											"referenceName": "AzureBlobJSON",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_Blob_Container": {
@@ -1347,7 +1347,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -1367,7 +1367,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -1430,7 +1430,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlobJSON')]"
 			]
 		},
 		{
@@ -1585,7 +1585,7 @@
 						],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -1646,7 +1646,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]",
+				"[concat(variables('factoryId'), '/datasets/AzureBlobJSON')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage')]"
 			]
 		},
@@ -2170,7 +2170,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -2240,7 +2240,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]",
+				"[concat(variables('factoryId'), '/datasets/AzureBlobJSON')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]"
 			]
 		},
@@ -2308,7 +2308,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -2518,7 +2518,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]",
+				"[concat(variables('factoryId'), '/datasets/AzureBlobJSON')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]",
 				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase')]"
 			]
@@ -2608,7 +2608,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -2628,7 +2628,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -2683,7 +2683,7 @@
 			"dependsOn": [
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]",
-				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlobJSON')]"
 			]
 		},
 		{
@@ -2783,7 +2783,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "JSON_Blob_Dataset",
+											"referenceName": "AzureBlobJSON",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_Blob_Container": {
@@ -2803,7 +2803,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "JSON_Blob_Dataset",
+											"referenceName": "AzureBlobJSON",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_Blob_Container": {
@@ -2858,7 +2858,7 @@
 			"dependsOn": [
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]",
-				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlobJSON')]"
 			]
 		},
 		{
@@ -3026,7 +3026,7 @@
 										{
 											"name": "UserQueryCSVBlobDataSet",
 											"dataset": {
-												"referenceName": "CSV_Blob_DataSet",
+												"referenceName": "AzureBlobCSV",
 												"type": "DatasetReference",
 												"parameters": {
 													"ds_v_Blob_Container": "azurecontainer",
@@ -3055,7 +3055,7 @@
 			"dependsOn": [
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/dataflows/powerquery_sample')]",
-				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlobCSV')]"
 			]
 		},
 		{
@@ -3137,7 +3137,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -3231,7 +3231,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "JSON_Blob_Dataset",
+											"referenceName": "AzureBlobJSON",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_Blob_Container": {
@@ -3251,7 +3251,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "JSON_Blob_Dataset",
+											"referenceName": "AzureBlobJSON",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_Blob_Container": {
@@ -3358,7 +3358,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlobJSON')]"
 			]
 		},
 		{
@@ -3698,7 +3698,7 @@
 											},
 											"inputs": [
 												{
-													"referenceName": "JSON_Blob_Dataset",
+													"referenceName": "AzureBlobJSON",
 													"type": "DatasetReference",
 													"parameters": {
 														"ds_v_Blob_Container": {
@@ -3718,7 +3718,7 @@
 											],
 											"outputs": [
 												{
-													"referenceName": "JSON_Blob_Dataset",
+													"referenceName": "AzureBlobJSON",
 													"type": "DatasetReference",
 													"parameters": {
 														"ds_v_Blob_Container": {
@@ -3779,7 +3779,7 @@
 											},
 											"inputs": [
 												{
-													"referenceName": "JSON_Blob_Dataset",
+													"referenceName": "AzureBlobJSON",
 													"type": "DatasetReference",
 													"parameters": {
 														"ds_v_Blob_Container": {
@@ -3799,7 +3799,7 @@
 											],
 											"outputs": [
 												{
-													"referenceName": "JSON_Blob_Dataset",
+													"referenceName": "AzureBlobJSON",
 													"type": "DatasetReference",
 													"parameters": {
 														"ds_v_Blob_Container": {
@@ -3860,7 +3860,7 @@
 											},
 											"inputs": [
 												{
-													"referenceName": "JSON_Blob_Dataset",
+													"referenceName": "AzureBlobJSON",
 													"type": "DatasetReference",
 													"parameters": {
 														"ds_v_Blob_Container": {
@@ -3880,7 +3880,7 @@
 											],
 											"outputs": [
 												{
-													"referenceName": "JSON_Blob_Dataset",
+													"referenceName": "AzureBlobJSON",
 													"type": "DatasetReference",
 													"parameters": {
 														"ds_v_Blob_Container": {
@@ -3935,7 +3935,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlobJSON')]"
 			]
 		},
 		{
@@ -4212,7 +4212,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/CSV_Blob_DataSet')]",
+			"name": "[concat(parameters('factoryName'), '/AzureBlobCSV')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -4402,7 +4402,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/JSON_Blob_Dataset')]",
+			"name": "[concat(parameters('factoryName'), '/AzureBlobJSON')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -4816,14 +4816,14 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "Employee"
 						},
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "Department"
@@ -4832,21 +4832,21 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "SinkAgg"
 						},
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "SinkSort"
 						},
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "SinkUnion"
@@ -5017,7 +5017,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlobCSV')]"
 			]
 		},
 		{
@@ -5030,14 +5030,14 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "Employee"
 						},
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "Department"
@@ -5046,7 +5046,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "EmpDept"
@@ -5136,7 +5136,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlobCSV')]"
 			]
 		},
 		{
@@ -5149,7 +5149,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -5205,7 +5205,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]",
+				"[concat(variables('factoryId'), '/datasets/AzureBlobCSV')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]"
 			]
 		},
@@ -5226,7 +5226,7 @@
 						},
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "source2"
@@ -5333,7 +5333,7 @@
 			"dependsOn": [
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]",
-				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlobCSV')]"
 			]
 		},
 		{
@@ -5346,7 +5346,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -5355,7 +5355,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -5396,8 +5396,8 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/JSON_Blob_Dataset')]",
-				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlobJSON')]",
+				"[concat(variables('factoryId'), '/datasets/AzureBlobCSV')]"
 			]
 		},
 		{
@@ -5419,7 +5419,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -5476,7 +5476,7 @@
 			"dependsOn": [
 				"[variables('factoryId')]",
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable')]",
-				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlobCSV')]"
 			]
 		},
 		{
@@ -5489,7 +5489,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "employee"
@@ -5498,14 +5498,14 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "AggSink"
 						},
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "PivotSink"
@@ -5555,7 +5555,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlobCSV')]"
 			]
 		},
 		{
@@ -5568,7 +5568,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -5577,7 +5577,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -5613,7 +5613,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlobCSV')]"
 			]
 		},
 		{
@@ -5626,7 +5626,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -5635,7 +5635,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -5674,7 +5674,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlobCSV')]"
 			]
 		},
 		{
@@ -5687,7 +5687,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -5696,7 +5696,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -5737,7 +5737,7 @@
 			},
 			"dependsOn": [
 				"[variables('factoryId')]",
-				"[concat(variables('factoryId'), '/datasets/CSV_Blob_DataSet')]"
+				"[concat(variables('factoryId'), '/datasets/AzureBlobCSV')]"
 			]
 		},
 		{

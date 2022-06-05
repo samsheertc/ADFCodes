@@ -22,14 +22,14 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "Employee"
 						},
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "Department"
@@ -38,7 +38,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "EmpDept"
@@ -138,7 +138,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -211,7 +211,7 @@
 						},
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "source2"
@@ -327,7 +327,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -336,7 +336,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -396,7 +396,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -462,7 +462,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "employee"
@@ -471,14 +471,14 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "AggSink"
 						},
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "PivotSink"
@@ -538,7 +538,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -547,7 +547,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -593,7 +593,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -602,7 +602,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -651,7 +651,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -660,7 +660,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -1257,7 +1257,7 @@
 										{
 											"name": "UserQueryCSVBlobDataSet",
 											"dataset": {
-												"referenceName": "CSV_Blob_DataSet",
+												"referenceName": "AzureBlobCSV",
 												"type": "DatasetReference",
 												"parameters": {
 													"ds_v_Blob_Container": "azurecontainer",

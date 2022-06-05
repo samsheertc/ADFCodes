@@ -689,7 +689,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/CSV_Blob_DataSet')]",
+			"name": "[concat(parameters('factoryName'), '/AzureBlobCSV')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -875,7 +875,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/JSON_Blob_Dataset')]",
+			"name": "[concat(parameters('factoryName'), '/AzureBlobJSON')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {

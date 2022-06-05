@@ -317,7 +317,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "JSON_Blob_Dataset",
+											"referenceName": "AzureBlobJSON",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_Blob_Container": {
@@ -412,7 +412,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "JSON_Blob_Dataset",
+											"referenceName": "AzureBlobJSON",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_Blob_Container": {
@@ -696,7 +696,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -797,7 +797,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataset": {
-											"referenceName": "JSON_Blob_Dataset",
+											"referenceName": "AzureBlobJSON",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_Blob_Container": {
@@ -918,7 +918,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -938,7 +938,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -1026,7 +1026,7 @@
 						],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -1245,7 +1245,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -1379,7 +1379,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -1674,7 +1674,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -1694,7 +1694,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -1845,7 +1845,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "JSON_Blob_Dataset",
+											"referenceName": "AzureBlobJSON",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_Blob_Container": {
@@ -1865,7 +1865,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "JSON_Blob_Dataset",
+											"referenceName": "AzureBlobJSON",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_Blob_Container": {
@@ -1939,7 +1939,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "JSON_Blob_Dataset",
+								"referenceName": "AzureBlobJSON",
 								"type": "DatasetReference",
 								"parameters": {
 									"ds_v_Blob_Container": {
@@ -2033,7 +2033,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "JSON_Blob_Dataset",
+											"referenceName": "AzureBlobJSON",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_Blob_Container": {
@@ -2053,7 +2053,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "JSON_Blob_Dataset",
+											"referenceName": "AzureBlobJSON",
 											"type": "DatasetReference",
 											"parameters": {
 												"ds_v_Blob_Container": {
@@ -2489,7 +2489,7 @@
 											},
 											"inputs": [
 												{
-													"referenceName": "JSON_Blob_Dataset",
+													"referenceName": "AzureBlobJSON",
 													"type": "DatasetReference",
 													"parameters": {
 														"ds_v_Blob_Container": {
@@ -2509,7 +2509,7 @@
 											],
 											"outputs": [
 												{
-													"referenceName": "JSON_Blob_Dataset",
+													"referenceName": "AzureBlobJSON",
 													"type": "DatasetReference",
 													"parameters": {
 														"ds_v_Blob_Container": {
@@ -2570,7 +2570,7 @@
 											},
 											"inputs": [
 												{
-													"referenceName": "JSON_Blob_Dataset",
+													"referenceName": "AzureBlobJSON",
 													"type": "DatasetReference",
 													"parameters": {
 														"ds_v_Blob_Container": {
@@ -2590,7 +2590,7 @@
 											],
 											"outputs": [
 												{
-													"referenceName": "JSON_Blob_Dataset",
+													"referenceName": "AzureBlobJSON",
 													"type": "DatasetReference",
 													"parameters": {
 														"ds_v_Blob_Container": {
@@ -2651,7 +2651,7 @@
 											},
 											"inputs": [
 												{
-													"referenceName": "JSON_Blob_Dataset",
+													"referenceName": "AzureBlobJSON",
 													"type": "DatasetReference",
 													"parameters": {
 														"ds_v_Blob_Container": {
@@ -2671,7 +2671,7 @@
 											],
 											"outputs": [
 												{
-													"referenceName": "JSON_Blob_Dataset",
+													"referenceName": "AzureBlobJSON",
 													"type": "DatasetReference",
 													"parameters": {
 														"ds_v_Blob_Container": {
@@ -2868,14 +2868,14 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "Employee"
 						},
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "Department"
@@ -2884,21 +2884,21 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "SinkAgg"
 						},
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "SinkSort"
 						},
 						{
 							"dataset": {
-								"referenceName": "CSV_Blob_DataSet",
+								"referenceName": "AzureBlobCSV",
 								"type": "DatasetReference"
 							},
 							"name": "SinkUnion"
