@@ -456,7 +456,8 @@
 			"properties": {
 				"parameters": {
 					"ls_v_DBName": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "entdwdb"
 					}
 				},
 				"annotations": [],
